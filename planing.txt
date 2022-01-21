@@ -1,0 +1,92 @@
+# Users Rolls
+    - Admin : have the ability to do everything ( manager, member ) can do plus ->
+        . [ create / edit / remove ] project 
+        . [ create / remove ] Manager 
+        . [ create / remove ] member
+        . [ add / remove ] manager to/from the projects
+        . [ add / remove ] member to/from the project
+        . [ add / edit / remove ] ticket/issue/bug 
+        . [ add / edit / remove ] Comment On Issue/Ticket
+
+    - Manager : have the ability to do everything  ( member ) can do plus ->  
+        . [ read ] All Tickets About This Project
+        . [ add / remove ] member to/from the project
+        . [ add / edit / remove ] ticket/issue/bug
+        . [ add / edit / remove ] Comment On Issue/Ticket
+
+    - Member : can add ticket/bug to project already created by admin ->
+        . [ read ] All Tickets About Projects Which Manager Or Admin Invited Him/Her In
+        . [ add / edit / remove ] ticket/issue/bug ( Only him/her Ticket)
+        . [ add / edit / remove ] Comment On Issue/Ticket
+
+
+# Ticket Fields
+    - Title
+        . EX : Lost some recorded videos after restarting the PorchCam app
+    - Description
+        . EX : User reports that their desktop app crashed while they were using it, and when they came back, they were missing 2 or 3 recorded videos from the previous week
+    - Status
+        . [ blocked, in progress, complete]
+    - Created By
+        . Date
+    - Created By
+        . User/Member
+    - Assigned To
+        . User/Member
+    - Opened Day
+        . Date
+    - Priority
+    - Bug Source
+        . EX : Emailed in from user Marsha Stewart (marsha.s@example.com)
+    - Attachments
+        . [ Image ]
+
+
+# Pages
+    - Home Page / Login Page
+        -> [ After Login ] DashBoard
+            . Pinned Projects
+            . New Tickets
+            . Show Projects
+        -> [After Login ] All Projects / Should Show All Project on aside bar
+        -> [ After Login ] Project
+            . Members Of This Project 
+            . Tickets About This Project
+        -> [ After Login ] Tickets
+        -> [ After Login ] Members
+
+
+# Database
+    - Users
+        . UUID - user id
+        . Role
+        . Display Name
+        . Email
+
+    - Projects
+        . Project Name
+        . Project Description
+        . Project Members
+        . Project Manager
+        . Project Created At
+
+    - Tickets
+        . Ticket Title 
+        . Ticket Description
+        . Ticket Priority
+        . Ticket Status
+        . Started @
+        . Ended @
+        . Time Estimate (Hours)
+        . Assigned To ( Could Be Multiple Member ) 
+        . Assigned By 
+
+    - Ticket Comments
+        . User 
+        . Ticket
+        . Message
+        
+    - Users Info
+        . User
+        . Viewed Tickets
+        . Pinned Tickets
