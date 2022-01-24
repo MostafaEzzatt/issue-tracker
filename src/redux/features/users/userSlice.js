@@ -4,6 +4,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, query, getDocs } from "firebase/firestore";
 import { firestore } from "../../../firebase";
 
+// React Toastify
+import { toast } from "react-toastify";
+
 const initialState = { users: [], isLoggedIn: false, isLoading: true };
 
 export const getUsers = createAsyncThunk("users/get", async () => {
@@ -26,7 +29,7 @@ export const userSlice = createSlice({
       state.isLoading = false;
     },
     [getUsers.rejected]: (state, payload) => {
-      console.log("rejected");
+      toast.error("Loading Users Rejected");
     },
   },
 });

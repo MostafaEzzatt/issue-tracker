@@ -16,7 +16,7 @@
 /build
 .env
 .env_local
-.planing
+planing.txt
 
 # misc
 .DS_Store

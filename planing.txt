@@ -27,14 +27,12 @@
         . EX : User reports that their desktop app crashed while they were using it, and when they came back, they were missing 2 or 3 recorded videos from the previous week
     - Status
         . [ blocked, in progress, complete]
-    - Created By
+    - Created At
         . Date
     - Created By
         . User/Member
     - Assigned To
         . User/Member
-    - Opened Day
-        . Date
     - Priority
     - Bug Source
         . EX : Emailed in from user Marsha Stewart (marsha.s@example.com)

@@ -3,16 +3,16 @@ import { useState, useEffect, useRef } from "react";
 // Assets
 import ArrowDown from "../../assets/arrowDown.svg";
 
-const DropdownInput = ({ list, setData }) => {
+const DropdownInput = ({
+  list,
+  setData,
+  field,
+  idField,
+  selectedInput = "",
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Choose The Manager");
-  const [managers, setManagers] = useState([]);
+  const [selected, setSelected] = useState("Choose From The List");
   const menuRef = useRef();
-
-  useEffect(() => {
-    let managers = list.filter((user) => user.role == "manager");
-    setManagers(managers);
-  }, [list]);
 
   useEffect(() => {
     const handleWindowClick = (e) => {
@@ -28,14 +28,20 @@ const DropdownInput = ({ list, setData }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedInput) {
+      setSelected(selectedInput);
+    }
+  }, [selectedInput]);
+
   const handleClick = (manager) => {
-    setSelected(manager.displayName);
+    setSelected(manager[field]);
     setData(manager);
   };
 
   return (
     <div
-      className="border border-scorpion rounded py-3 px-3 mt-10px flex justify-between group group-hover:border-cod-gray cursor-pointer relative"
+      className="border border-scorpion rounded py-3 px-3 mt-10px flex justify-between group group-hover:border-cod-gray cursor-pointer relative w-full"
       onClick={() => setIsOpen(!isOpen)}
       ref={menuRef}
     >
@@ -46,15 +52,15 @@ const DropdownInput = ({ list, setData }) => {
           isOpen ? "absolute" : "hidden"
         } top-full left-0 right-0 rounded py-1 px-1 mt-10px bg-silver shadow-md`}
       >
-        {managers.length > 0 ? (
+        {list.length > 0 ? (
           <ul className="divide-y">
-            {managers.map((manager) => (
+            {list.map((item) => (
               <li
-                className="py-3 hover:bg-dodger-blue hover:text-silver font-medium transition-colors px-3"
-                key={manager.uuid}
-                onClick={() => handleClick(manager)}
+                className="py-3 hover:bg-dodger-blue hover:text-silver font-medium transition-colors px-3 break-words"
+                key={item[idField]}
+                onClick={() => handleClick(item)}
               >
-                {manager.displayName}
+                {item[field]}
               </li>
             ))}
           </ul>

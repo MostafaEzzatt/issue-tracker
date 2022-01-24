@@ -6,6 +6,7 @@ import { auth } from "../../firebase";
 
 // Redux
 import { login } from "../../redux/features/auth/authSlice";
+import { getUsers } from "../../redux//features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
@@ -19,8 +20,6 @@ const CheckAuth = ({ children }) => {
     const unSub = onAuthStateChanged(auth, (user) => {
       let userObject = { user: {}, isLoggedIn: false, isLoading: false };
 
-      console.log(user);
-
       if (user && user.displayName) {
         userObject.user = {
           uuid: user.uid,
@@ -33,6 +32,8 @@ const CheckAuth = ({ children }) => {
       }
       dispatch(login(userObject));
     });
+
+    dispatch(getUsers());
     return unSub;
   }, []);
 

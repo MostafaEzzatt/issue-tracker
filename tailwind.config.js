@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        title: ["2rem", "2.5rem"],
+      },
       spacing: {
         "10px": "10px",
       },

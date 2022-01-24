@@ -37,15 +37,21 @@ const Nav = () => {
           </Link>
 
           <Link href="/project/new">
-            <a className="px-1 py-1 bg-dodger-blue hover:bg-moody-blue transition-colors rounded flex justify-center items-center text-white">
-              <Plus className="w-5 h-5" />
+            <a className="px-1 py-1 bg-dodger-blue hover:bg-moody-blue transition-colors rounded flex justify-center items-center">
+              <Plus className="w-5 h-5 text-white" />
             </a>
           </Link>
         </li>
-        <li>
+        <li className="flex pr-3">
           <Link href="/tickets">
-            <a className="font-medium text-xl text-cod-gray hover:text-dodger-blue">
+            <a className="font-medium text-xl text-cod-gray hover:text-dodger-blue flex-auto">
               Tickets
+            </a>
+          </Link>
+
+          <Link href="/tickets/new">
+            <a className="px-1 py-1 bg-dodger-blue hover:bg-moody-blue transition-colors rounded flex justify-center items-center">
+              <Plus className="w-5 h-5  text-white" />
             </a>
           </Link>
         </li>

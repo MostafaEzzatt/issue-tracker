@@ -1,6 +1,6 @@
 import React from "react";
 
-const RadioInput = ({ list, prefix, store }) => {
+const RadioInput = ({ list, prefix, store, checked }) => {
   return (
     <div className="space-x-2">
       {list.map((item) => (
@@ -11,6 +11,7 @@ const RadioInput = ({ list, prefix, store }) => {
             value={item}
             className="align-middle"
             onChange={(e) => store(e.target.value)}
+            checked={checked == item ? item : ""}
           />
           <span>{item}</span>
         </label>

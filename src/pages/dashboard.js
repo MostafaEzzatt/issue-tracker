@@ -1,4 +1,9 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
+
+// Firebase
+import { auth, firestore } from "../firebase";
+import { collection, getDocs, limit, query } from "firebase/firestore";
 
 //Components
 import Layout from "../components/layout";
@@ -11,6 +16,18 @@ import ContentList from "../components/ContentList";
 import ProjectCard from "../components/project/ProjectCard";
 
 export default function Dashboard() {
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    const getDocsCollectionRef = collection(firestore, "Projects");
+    const getDocsQueryRef = query(getDocsCollectionRef, limit(3));
+    getDocs(getDocsQueryRef).then((data) => {
+      const tempData = data.docs.map((item) =>
+        Object.assign(item.data(), { id: item.id })
+      );
+      setProjects(tempData);
+    });
+  }, []);
+
   return (
     <>
       <Head>
@@ -48,24 +65,21 @@ export default function Dashboard() {
             assignedBy="John Doe"
           />
         </ContentGrid>
-        <LinkButton txt="See All" dist="#" />
 
         <SectionTitle title="Project" />
         <ContentList>
-          <ProjectCard
-            img="https://i.pravatar.cc/50"
-            title="Reddit"
-            startedAt="10:30 | 1/16/2022"
-            manager="John Doe"
-            description="Nisl, ullamcorper duis tincidunt nibh et risus aliquam suscipit metus. Orci, tortor blandit fusce pellentesque at eget dignissim erat. Natoque phasellus quis erat bibendum nulla cras. Metus eu sit vitae orci convallis. Amet, suspendisse eget dignissim cras sed et, vulputate. Ac vestibulum id ipsum mauris ..."
-          />
-          <ProjectCard
-            img="https://i.pravatar.cc/50"
-            title="Reddit"
-            startedAt="10:30 | 1/16/2022"
-            manager="John Doe"
-            description="Nisl, ullamcorper duis tincidunt nibh et risus aliquam suscipit metus. Orci, tortor blandit fusce pellentesque at eget dignissim erat. Natoque phasellus quis erat bibendum nulla cras. Metus eu sit vitae orci convallis. Amet, suspendisse eget dignissim cras sed et, vulputate. Ac vestibulum id ipsum mauris ..."
-          />
+          {projects.length > 0 &&
+            projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                id={project.id}
+                img={project.icon}
+                title={project.title}
+                startedAt={project.createdAt}
+                manager={project.manager}
+                description={project.description}
+              />
+            ))}
         </ContentList>
       </Layout>
     </>

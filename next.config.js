@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["i.pravatar.cc"],
+    domains: ["i.pravatar.cc", "firebasestorage.googleapis.com"],
   },
   webpack(config) {
     config.module.rules.push({

@@ -1,42 +1,45 @@
 import { useState, useEffect } from "react";
-import Router from "next/router";
-
-//Assets
-import Loading from "../../assets/loading.svg";
+import { useRouter } from "next/router";
 
 // Components
-import Layout from "../../components/layout";
-import TextInput from "../../components/form/TextInput";
-import Textarea from "../../components/form/TextareaInput";
-import DateInput from "../../components/form/DateInput";
-import SectionTitle from "../../components/SectionTitle";
-import UserBlock from "../../components/user/UserBlock";
-import ContentGrid from "../../components/ContentGrid";
-import FileUploader from "../../components/form/FileUploader";
-import DropdownInput from "../../components/form/DropdownInput";
-import RadioInput from "../../components/form/RadioInput";
+import Layout from "../../../components/layout";
+import TextInput from "../../../components/form/TextInput";
+import Textarea from "../../../components/form/TextareaInput";
+import DateInput from "../../../components/form/DateInput";
+import SectionTitle from "../../../components/SectionTitle";
+import UserBlock from "../../../components/user/UserBlock";
+import ContentGrid from "../../../components/ContentGrid";
+import FileUploader from "../../../components/form/FileUploader";
+import DropdownInput from "../../../components/form/DropdownInput";
+import RadioInput from "../../../components/form/RadioInput";
+import Loading from "../../../components/layout/Loading";
 
-// Util
-import getToday from "../../util/getToday";
+// Assets
+import LoadingSVG from "../../../assets/loading.svg";
 
 // Custom Hooks
-import useUploadImage from "../../hooks/useUploadImage";
+import useGetProject from "../../../hooks/useGetProject";
+import useUploadImage from "../../../hooks/useUploadImage";
+
+// Util
+import getToday from "../../../util/getToday";
 
 // Redux
 import { useSelector } from "react-redux";
 
-// Firebase / Storage
-import { firestore } from "../../firebase";
-import { addDoc, collection, doc } from "firebase/firestore";
+// Firebase
+import { firestore } from "../../../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
-// React Toastify
-import { toast } from "react-toastify";
+const Edit = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const { project, loading, error: projectError } = useGetProject(id);
+  const uploadImage = useUploadImage();
 
-const New = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [manager, setManager] = useState(null);
-  const [managerList, setManagerList] = useState([]);
   const [state, setState] = useState(null);
   const [date, setDate] = useState("");
   const [today, setToday] = useState("");
@@ -45,32 +48,24 @@ const New = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [projectMembers, setProjectMembers] = useState([]);
   const [projectIcon, setProjectIcon] = useState(null);
+  const [projectIconURL, setProjectIconURL] = useState("");
   const [disabledForm, setDisabledForm] = useState(false);
-  const uploadImage = useUploadImage();
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const todayDate = getToday();
-    setToday(todayDate);
-    setDate(todayDate);
-  }, []);
-
-  useEffect(() => {
-    setFilteredUsers(users.users);
-    setManagerList(users.users.filter((user) => user.role == "manager"));
-  }, [users]);
-
-  const handleTitle = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleDescription = (e) => {
-    setDescription(e.target.value);
-  };
-
-  const handleDate = (e) => {
-    setDate(e.target.value);
-  };
+    if (project) {
+      setToday(getToday());
+      setTitle(project?.title);
+      setDescription(project?.description);
+      setDate(project?.timeEstimated);
+      setManager(project?.manager);
+      setState(project.state);
+      setFilteredUsers(users.users);
+      const projectMembersId = project.members.map((member) => member.uuid);
+      setProjectMembers(projectMembersId);
+      setProjectIconURL(project.icon);
+    }
+  }, [project, users]);
 
   const addRemoveMemberFromProject = (userId) => {
     const isIncluded = projectMembers.includes(userId);
@@ -95,46 +90,36 @@ const New = () => {
     }
   };
 
-  const addProject = async () => {
-    if (!manager || !title || !description || !state) return;
-
-    setDisabledForm(true);
-    const collectionRef = collection(firestore, "Projects");
-    const usersCollectionList = projectMembers.map((member) =>
-      doc(firestore, "Users", member)
-    );
-    const managerRef = doc(firestore, "Users", manager.uuid);
-
-    const insertDoc = await addDoc(collectionRef, {
+  const updateProject = () => {
+    const projectDocRef = doc(firestore, "Projects", id);
+    const projectObject = {
       title,
       description,
-      members: usersCollectionList,
-      manager: managerRef,
-      timeEstimated: date,
-      createdAt: today,
       state,
-    });
+      icon: projectIconURL,
+      manager: doc(firestore, "Users", manager.uuid),
+      timeEstimated: date,
+      createdAt: project.createdAt,
+      members: projectMembers.map((member) => doc(firestore, "Users", member)),
+    };
 
-    return insertDoc.id;
+    setDoc(projectDocRef, projectObject, { merge: true }).then(() => {
+      setDisabledForm(false);
+    });
   };
 
-  const handleSubmit = async () => {
-    if ((title.length < 10 || description.length < 10, !manager)) return;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!title || !description || !manager || !state) return;
+    setDisabledForm(true);
 
-    try {
-      const projectId = await addProject();
-
-      if (projectIcon) {
-        uploadImage(projectId, projectIcon);
-      }
-      toast.success("Project Created");
-      Router.push("/dashboard");
-    } catch (error) {
-      toast.success("Something When Wrong");
-      // console.log(error);
+    updateProject();
+    if (projectIcon) {
+      uploadImage(id, projectIcon);
     }
   };
 
+  if (loading) return <Loading />;
   return (
     <Layout>
       <div className="mr-10px">
@@ -144,39 +129,46 @@ const New = () => {
             onClick={handleSubmit}
             disabled={disabledForm}
           >
-            {disabledForm ? <Loading className="w-6 h-6" /> : "Add Project"}
+            {disabledForm ? (
+              <LoadingSVG className="w-6 h-6" />
+            ) : (
+              "Update Project"
+            )}
           </button>
         </div>
         <TextInput
           label="Title"
           error=""
           value={title}
-          handleChange={handleTitle}
+          handleChange={(e) => setTitle(e.target.value)}
         />
 
         <Textarea
           label="Description"
           error=""
           value={description}
-          handleChange={handleDescription}
+          handleChange={(e) => setDescription(e.target.value)}
         />
 
-        <FileUploader file={projectIcon} setFile={setProjectIcon} />
+        <FileUploader
+          file={projectIcon}
+          setFile={setProjectIcon}
+          url={projectIconURL}
+        />
 
         <DateInput
           label="Time Estimated"
           error=""
           value={date}
           min={today}
-          handleChange={handleDate}
+          handleChange={(e) => setDate(e.target.value)}
         />
 
         <SectionTitle title="Manager" />
         <DropdownInput
-          list={managerList}
+          list={users.users}
           setData={setManager}
-          field="displayName"
-          idField="uuid"
+          selectedInput={manager?.displayName}
         />
 
         <SectionTitle title="State" />
@@ -199,8 +191,6 @@ const New = () => {
           {filteredUsers.length > 0 &&
             filteredUsers.map((user) => (
               <UserBlock
-                usersList={projectMembers}
-                setUsersList={setProjectMembers}
                 user={user}
                 key={user.uuid}
                 addRemove={addRemoveMemberFromProject}
@@ -213,4 +203,4 @@ const New = () => {
   );
 };
 
-export default New;
+export default Edit;
