@@ -16,9 +16,10 @@ const useGetProject = (id) => {
 
   useEffect(() => {
     const tempProject = projects.filter((data) => data.id == id);
+
     if (tempProject.length == 0) {
-      setError(true);
-      setLoading(true);
+      setError("Cannot Find This Project");
+      setLoading(false);
     } else {
       const managerId = tempProject[0].manager.id;
       const manager = users.users.filter((user) => user.uuid == managerId);
@@ -34,14 +35,14 @@ const useGetProject = (id) => {
           ) !== -1
       );
 
+      setLoading(false);
+      setError(false);
       setProject(
         Object.assign(
           { ...tempProject[0] },
           { manager: manager[0], endAt, members }
         )
       );
-      setLoading(false);
-      setError(false);
     }
   }, [projects, id]);
 

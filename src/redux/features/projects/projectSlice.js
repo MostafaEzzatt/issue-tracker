@@ -13,12 +13,11 @@ const projectSlice = createSlice({
       );
 
       if (!isExist) {
-        state.data = [...state.data, tempProject];
+        state.data = [tempProject, ...state.data];
       }
     },
     updateProject: (state, action) => {
       const tempProject = action.payload.project;
-
       const newState = state.data.map((project) => {
         if (project.id == tempProject.id) {
           return tempProject;

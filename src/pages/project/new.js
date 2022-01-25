@@ -18,6 +18,7 @@ import RadioInput from "../../components/form/RadioInput";
 
 // Util
 import getToday from "../../util/getToday";
+import checkIfAdmin from "../../util/checkIfAdmin";
 
 // Custom Hooks
 import useUploadImage from "../../hooks/useUploadImage";
@@ -47,7 +48,7 @@ const New = () => {
   const [projectIcon, setProjectIcon] = useState(null);
   const [disabledForm, setDisabledForm] = useState(false);
   const uploadImage = useUploadImage();
-  const [error, setError] = useState("");
+  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
     const todayDate = getToday();
@@ -112,6 +113,7 @@ const New = () => {
       manager: managerRef,
       timeEstimated: date,
       createdAt: today,
+      creation: new Date(),
       state,
     });
 
@@ -119,7 +121,13 @@ const New = () => {
   };
 
   const handleSubmit = async () => {
-    if ((title.length < 10 || description.length < 10, !manager)) return;
+    if (
+      title.length < 10 ||
+      description.length < 10 ||
+      !manager ||
+      auth.user.role !== "admin"
+    )
+      return;
 
     try {
       const projectId = await addProject();
@@ -134,6 +142,8 @@ const New = () => {
       // console.log(error);
     }
   };
+
+  checkIfAdmin(auth);
 
   return (
     <Layout>

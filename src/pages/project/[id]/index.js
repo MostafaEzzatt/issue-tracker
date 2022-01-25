@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,33 +9,62 @@ import Stamp from "../../../components/ticket/Stamp";
 import SectionTitle from "../../../components/SectionTitle";
 import ContentGrid from "../../../components/ContentGrid";
 import DisplayUserBlock from "../../../components/user/DisplayUserBlock";
+import Loading from "../../../components/layout/Loading";
+import ErrorBlock from "../../../components/shared/ErrorBlock";
 
 // Custome Hooks
 import useGetProject from "../../../hooks/useGetProject";
+import useGetProjectTickets from "../../../hooks/useGetProjectTickets";
 
 // Assets
 import Pencil from "../../../assets/pen.svg";
+import TicketCard from "../../../components/ticket/TicketCard";
+
+// Redux
+import { useSelector } from "react-redux";
+
+// Util
+import checkMemberInProject from "../../../util/checkMemberInProject";
 
 const SingleProject = () => {
   const router = useRouter();
   const { id } = router.query;
   const { project, loading, error } = useGetProject(id);
+  const {
+    tickets,
+    loading: ticketsIsLoading,
+    error: TicketsError,
+  } = useGetProjectTickets(id);
+  const auth = useSelector((state) => state.auth);
 
-  console.log(project);
+  useEffect(() => {
+    if (project && auth) {
+      checkMemberInProject(auth, project);
+    }
+  }, [project, auth]);
 
-  if (loading) return "loading";
+  if (loading || ticketsIsLoading) return <Loading />;
+  if (!loading && !ticketsIsLoading && error)
+    return (
+      <Layout>
+        <ErrorBlock message={error} />
+      </Layout>
+    );
 
   return (
     <Layout>
       <div className="mr-10 relative">
-        <div className="absolute -top-8 -right-10 w-8 h-8 rounded-bl bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
-          <Link href={`${id}/edit`}>
-            <a className="text-white cursor-pointer">
-              <Pencil className="w-6 h-6" />
-            </a>
-          </Link>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center gap-2">
+        {auth.user.role !== "member" && (
+          <div className="absolute -top-8 -right-10 w-8 h-8 rounded-bl bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
+            <Link href={`${id}/edit`}>
+              <a className="text-white cursor-pointer">
+                <Pencil className="w-6 h-6" />
+              </a>
+            </Link>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row items-center gap-2 max-w-full">
           {project.icon && (
             <Image
               src={project?.icon}
@@ -44,8 +74,10 @@ const SingleProject = () => {
               className="rounded-full"
             />
           )}
-          <h3 className="text-title font-semibold">{project.title}</h3>
-          <Stamp type="open" />
+          <h3 className="text-title font-semibold flex-auto break-words w-titleWidth">
+            {project.title}
+          </h3>
+          <Stamp type={project.state} />
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between">
@@ -73,6 +105,26 @@ const SingleProject = () => {
               <DisplayUserBlock key={user.uuid} user={user} />
             ))}
         </ContentGrid>
+
+        <SectionTitle title="Tickets" />
+        {tickets.length > 0 ? (
+          <ContentGrid>
+            {tickets.map((ticket) => (
+              <TicketCard
+                key={ticket.id}
+                id={ticket.id}
+                title={ticket.title}
+                description={ticket.description}
+                priority={ticket.priority}
+                assignedBy={ticket.author.displayName}
+              />
+            ))}
+          </ContentGrid>
+        ) : (
+          <div className="mt-10px w-full text-scorpion bg-white shadow-sm text-center py-6 font-bold">
+            {TicketsError}
+          </div>
+        )}
       </div>
     </Layout>
   );

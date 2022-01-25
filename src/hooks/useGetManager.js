@@ -1,23 +1,23 @@
-import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { firestore } from "../firebase";
+
+// Redux
+import { useSelector } from "react-redux";
 
 const useGetManager = (id) => {
   const [manager, setManager] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const users = useSelector((state) => state.users);
   useEffect(() => {
     if (id) {
-      const docRef = doc(firestore, "Users", id);
-      getDoc(docRef)
-        .then((data) => {
-          setManager(data.data());
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError("Something Went Wrong");
-        });
+      if (users.users.length > 0) {
+        setManager(users.users.filter((user) => user.uuid == id)[0]);
+        setLoading(false);
+        setError(null);
+      } else {
+        setLoading(false);
+        setError("Something Went Wrong");
+      }
     }
   }, [id]);
 

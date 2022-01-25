@@ -17,7 +17,6 @@ const useUploadImage = () => {
         const prog = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        // console.log("PROG ", prog);
       },
       (err) => toast.error("Error While Uploading Project Icon"),
       () => {

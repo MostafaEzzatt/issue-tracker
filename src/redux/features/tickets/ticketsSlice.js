@@ -11,7 +11,7 @@ const ticketsSlice = createSlice({
       const isExist = state.data.find((ticket) => ticket.id == tempTicket.id);
 
       if (!isExist) {
-        state.data = [...state.data, tempTicket];
+        state.data = [tempTicket, ...state.data];
       }
     },
     updateTicket: (state, action) => {

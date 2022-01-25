@@ -30,7 +30,7 @@ const Tickets = () => {
   }, [projectFilter, tickets]);
 
   useEffect(() => {
-    setProjectList([{ title: "All" }, ...projects.data]);
+    setProjectList([{ id: "all", title: "All" }, ...projects.data]);
   }, [projects]);
 
   if (loading) return <Loading />;

@@ -4,9 +4,9 @@ import Stamp from "./Stamp";
 
 const TicketCard = ({ id, title, description, priority, assignedBy }) => {
   return (
-    <Link href={`tickets/${id}`}>
-      <a className="col-span-2 ">
-        <div className="p-10px shadow-sm hover:shadow-md cursor-pointer bg-white">
+    <Link href={`/tickets/${id}`}>
+      <a className="col-span-2">
+        <div className="h-full p-10px shadow-sm hover:shadow-md cursor-pointer bg-white">
           <div className="pb-10px border-b border-solid border-black/5">
             <div className="flex justify-between">
               <h2 className="font-semibold text-cod-gray flex-auto truncate">
@@ -23,7 +23,7 @@ const TicketCard = ({ id, title, description, priority, assignedBy }) => {
 
           <p className="mt-10px break-words">
             {description.length > 300
-              ? `${description.substring(0, 299)} ...`
+              ? `${description.substring(0, 149)} ...`
               : description}
           </p>
         </div>

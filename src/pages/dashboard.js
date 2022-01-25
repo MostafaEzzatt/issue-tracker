@@ -1,32 +1,40 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 
-// Firebase
-import { auth, firestore } from "../firebase";
-import { collection, getDocs, limit, query } from "firebase/firestore";
-
-//Components
+// Components
 import Layout from "../components/layout";
 import SectionTitle from "../components/SectionTitle";
 import ContentGrid from "../components/ContentGrid";
 import ProjectSmallCard from "../components/project/ProjectSmallCard";
 import TicketCard from "../components/ticket/TicketCard";
-import LinkButton from "../components/LinkButton";
 import ContentList from "../components/ContentList";
 import ProjectCard from "../components/project/ProjectCard";
+import ErrorBlock from "../components/shared/ErrorBlock";
+
+// Custom Hooks
+import useGetAllProjects from "../hooks/useGetAllProjects";
+
+// Redux
+import { useSelector } from "react-redux";
+
+// Util
+import getMemberProjects from "../util/getMemberProjects";
+import getManagerProjects from "../util/getManagerProjects";
 
 export default function Dashboard() {
-  const [projects, setProjects] = useState([]);
+  const { projects, loading, error } = useGetAllProjects();
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const auth = useSelector((state) => state.auth);
+
   useEffect(() => {
-    const getDocsCollectionRef = collection(firestore, "Projects");
-    const getDocsQueryRef = query(getDocsCollectionRef, limit(3));
-    getDocs(getDocsQueryRef).then((data) => {
-      const tempData = data.docs.map((item) =>
-        Object.assign(item.data(), { id: item.id })
-      );
-      setProjects(tempData);
-    });
-  }, []);
+    if (auth.user.role == "member") {
+      setFilteredProjects(getMemberProjects(auth, projects));
+    } else if (auth.user.role == "manager") {
+      setFilteredProjects(getManagerProjects(auth, projects));
+    } else if (auth.user.role == "admin") {
+      setFilteredProjects(projects);
+    }
+  }, [projects, auth]);
 
   return (
     <>
@@ -68,18 +76,24 @@ export default function Dashboard() {
 
         <SectionTitle title="Project" />
         <ContentList>
-          {projects.length > 0 &&
-            projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                img={project.icon}
-                title={project.title}
-                startedAt={project.createdAt}
-                manager={project.manager}
-                description={project.description}
-              />
-            ))}
+          {filteredProjects.length > 0 || !loading ? (
+            filteredProjects
+              .slice(0, 3)
+              .map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  img={project.icon}
+                  title={project.title}
+                  startedAt={project.createdAt}
+                  manager={project.manager}
+                  description={project.description}
+                  state={project.state}
+                />
+              ))
+          ) : (
+            <ErrorBlock message={error} />
+          )}
         </ContentList>
       </Layout>
     </>

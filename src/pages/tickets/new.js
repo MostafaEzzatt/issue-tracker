@@ -72,6 +72,7 @@ const New = () => {
       createdAt: getToday(),
       author: doc(firestore, "Users", auth.user.uuid),
       project: doc(firestore, "Projects", project.id),
+      creation: new Date(),
       source,
     };
 

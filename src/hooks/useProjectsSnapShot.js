@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 // Firebase
 import { firestore } from "../firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -17,7 +17,11 @@ const useProjectsSnapShot = () => {
 
   useEffect(() => {
     const projectsCollectionRef = collection(firestore, "Projects");
-    const projectsSnapShot = onSnapshot(projectsCollectionRef, {
+    const projectQueryRef = query(
+      projectsCollectionRef,
+      orderBy("creation", "asc")
+    );
+    const projectsSnapShot = onSnapshot(projectQueryRef, {
       next: (snap) => {
         snap.docChanges().map((change) => {
           const project = {

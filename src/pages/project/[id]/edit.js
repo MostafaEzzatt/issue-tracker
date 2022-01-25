@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 
 // Components
 import Layout from "../../../components/layout";
@@ -30,6 +30,7 @@ import { useSelector } from "react-redux";
 // Firebase
 import { firestore } from "../../../firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const Edit = () => {
   const router = useRouter();
@@ -44,16 +45,17 @@ const Edit = () => {
   const [date, setDate] = useState("");
   const [today, setToday] = useState("");
   const [membersFilter, setMembersFilter] = useState("");
+  const [managerList, setManagerList] = useState([]);
   const users = useSelector((state) => state.users);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [projectMembers, setProjectMembers] = useState([]);
   const [projectIcon, setProjectIcon] = useState(null);
   const [projectIconURL, setProjectIconURL] = useState("");
   const [disabledForm, setDisabledForm] = useState(false);
-  const [error, setError] = useState("");
+  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (project) {
+    if (project && auth.user.role !== "member") {
       setToday(getToday());
       setTitle(project?.title);
       setDescription(project?.description);
@@ -63,18 +65,15 @@ const Edit = () => {
       setFilteredUsers(users.users);
       const projectMembersId = project.members.map((member) => member.uuid);
       setProjectMembers(projectMembersId);
-      setProjectIconURL(project.icon);
+      setProjectIconURL(project.icon || "");
     }
-  }, [project, users]);
+    setManagerList(users.users.filter((user) => user.role == "manager"));
 
-  const addRemoveMemberFromProject = (userId) => {
-    const isIncluded = projectMembers.includes(userId);
-    if (isIncluded) {
-      setProjectMembers(projectMembers.filter((user) => user !== userId));
-    } else {
-      setProjectMembers([...projectMembers, userId]);
+    if (auth.user.role == "member") {
+      toast.info("Manager And Admin only Can Do This");
+      Router.push(`/project/${id}`);
     }
-  };
+  }, [project, users, auth]);
 
   const handleMembersFilter = (e) => {
     const value = e.target.value;
@@ -82,7 +81,7 @@ const Edit = () => {
 
     if (value) {
       const tempFilteredUser = users.users.filter((user) =>
-        user.displayName.toLowerCase().match(`.*${value}.*`)
+        user.displayName.toLowerCase().match(`.*${value.toLowerCase()}.*`)
       );
       setFilteredUsers(tempFilteredUser);
     } else {
@@ -92,6 +91,7 @@ const Edit = () => {
 
   const updateProject = () => {
     const projectDocRef = doc(firestore, "Projects", id);
+
     const projectObject = {
       title,
       description,
@@ -103,9 +103,15 @@ const Edit = () => {
       members: projectMembers.map((member) => doc(firestore, "Users", member)),
     };
 
-    setDoc(projectDocRef, projectObject, { merge: true }).then(() => {
-      setDisabledForm(false);
-    });
+    setDoc(projectDocRef, projectObject, { merge: true })
+      .then(() => {
+        setDisabledForm(false);
+        toast.success("Project Updated");
+        Router.push(`/project/${id}`);
+      })
+      .catch(() => {
+        toast.error("Something Went Wrong While Updating The Project");
+      });
   };
 
   const handleSubmit = (e) => {
@@ -114,11 +120,11 @@ const Edit = () => {
     setDisabledForm(true);
 
     updateProject();
+
     if (projectIcon) {
       uploadImage(id, projectIcon);
     }
   };
-
   if (loading) return <Loading />;
   return (
     <Layout>
@@ -166,9 +172,11 @@ const Edit = () => {
 
         <SectionTitle title="Manager" />
         <DropdownInput
-          list={users.users}
+          list={managerList}
           setData={setManager}
           selectedInput={manager?.displayName}
+          field="displayName"
+          idField="uuid"
         />
 
         <SectionTitle title="State" />
@@ -191,10 +199,10 @@ const Edit = () => {
           {filteredUsers.length > 0 &&
             filteredUsers.map((user) => (
               <UserBlock
+                usersList={projectMembers}
+                setUsersList={setProjectMembers}
                 user={user}
                 key={user.uuid}
-                addRemove={addRemoveMemberFromProject}
-                onList={projectMembers.includes(user.uuid)}
               />
             ))}
         </ContentGrid>

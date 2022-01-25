@@ -11,6 +11,8 @@ import Loading from "../../../components/layout/Loading";
 import SectionTitle from "../../../components/SectionTitle";
 import ContentGrid from "../../../components/ContentGrid";
 import DisplayUserBlock from "../../../components/user/DisplayUserBlock";
+import Comments from "../../../components/ticket/Comments";
+import ErrorBlock from "../../../components/shared/ErrorBlock";
 
 // Custom Hooks
 import useGetTicket from "../../../hooks/useGetTicket";
@@ -20,20 +22,18 @@ const Index = () => {
   const { id } = router.query;
   const { ticket, loading, error } = useGetTicket(id);
 
-  console.log(ticket);
-
   if (loading && !error) return <Loading />;
   if (!loading && error)
     return (
       <Layout>
-        <div className="text-center text-scorpion font-bold">{error}</div>
+        <ErrorBlock message={error} />
       </Layout>
     );
 
   return (
     <Layout>
-      <div className="relative">
-        <div className="absolute -top-8 right-0 w-8 h-8 rounded-bl bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
+      <div className="relative mr-10px">
+        <div className="absolute -top-8 -right-10px w-8 h-8 rounded-bl bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
           <Link href={`${id}/edit`}>
             <a className="text-white cursor-pointer">
               <Pencil className="w-6 h-6" />
@@ -64,6 +64,8 @@ const Index = () => {
             </ContentGrid>
           </>
         )}
+
+        <Comments ticketId={id} />
       </div>
     </Layout>
   );

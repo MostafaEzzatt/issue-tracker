@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 // Firebase
 import { onAuthStateChanged, updateCurrentUser } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, firestore } from "../../firebase";
+import { getDoc, doc } from "firebase/firestore";
 
 // Redux
 import { login } from "../../redux/features/auth/authSlice";
@@ -20,17 +21,16 @@ const CheckAuth = ({ children }) => {
     const unSub = onAuthStateChanged(auth, (user) => {
       let userObject = { user: {}, isLoggedIn: false, isLoading: false };
 
-      if (user && user.displayName) {
-        userObject.user = {
-          uuid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-        };
-        userObject.isLoggedIn = true;
+      if (user) {
+        const authDocRef = doc(firestore, "Users", user.uid);
+        getDoc(authDocRef).then((user) => {
+          userObject.user = { ...user.data() };
+          userObject.isLoggedIn = true;
+          dispatch(login(userObject));
+        });
       } else {
-        updateCurrentUser(auth);
+        dispatch(login(userObject));
       }
-      dispatch(login(userObject));
     });
 
     dispatch(getUsers());
