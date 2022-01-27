@@ -10,6 +10,7 @@ import TicketCard from "../components/ticket/TicketCard";
 import ContentList from "../components/ContentList";
 import ProjectCard from "../components/project/ProjectCard";
 import ErrorBlock from "../components/shared/ErrorBlock";
+import LoadingBlock from "../components/shared/LoadingBlock";
 
 // Custom Hooks
 import useGetAllProjects from "../hooks/useGetAllProjects";
@@ -20,10 +21,16 @@ import { useSelector } from "react-redux";
 // Util
 import getMemberProjects from "../util/getMemberProjects";
 import getManagerProjects from "../util/getManagerProjects";
+import useGetNotVisitedTickets from "../hooks/useGetNotVisitedTickets";
 
 export default function Dashboard() {
   const { projects, loading, error } = useGetAllProjects();
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const {
+    tickets,
+    loading: ticketsLoading,
+    error: ticketsError,
+  } = useGetNotVisitedTickets();
   const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -57,26 +64,28 @@ export default function Dashboard() {
         </ContentGrid>
 
         <SectionTitle title="New Tickets" />
-        <ContentGrid>
-          <TicketCard
-            title="Problem With Creating New Post"
-            description="Sed pretium, turpis justo viverra feugiat. Varius ut gravida pharetra
-        turpis vulputate eget libero, eget bibendum."
-            priority="normal"
-            assignedBy="John Doe"
-          />
-          <TicketCard
-            title="Posts Not Showing After Choosing Priority"
-            description="Sed pretium, turpis justo viverra feugiat. Varius ut gravida pharetra
-        turpis vulputate eget libero, eget bibendum."
-            priority="critical"
-            assignedBy="John Doe"
-          />
-        </ContentGrid>
+        {!ticketsLoading && tickets.length > 0 ? (
+          <ContentGrid>
+            {tickets.map((ticket) => {
+              return (
+                <TicketCard
+                  key={ticket.id}
+                  id={ticket.id}
+                  title={ticket.title}
+                  description={ticket.description}
+                  priority={ticket.priority}
+                  assignedBy={ticket.author.displayName}
+                />
+              );
+            })}
+          </ContentGrid>
+        ) : (
+          <ErrorBlock message={ticketsError || "Cant Find Tickets"} />
+        )}
 
         <SectionTitle title="Project" />
         <ContentList>
-          {filteredProjects.length > 0 || !loading ? (
+          {filteredProjects.length > 0 || !ticketsLoading ? (
             filteredProjects
               .slice(0, 3)
               .map((project) => (

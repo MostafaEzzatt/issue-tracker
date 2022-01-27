@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Router from "next/router";
 
 //Assets
-import Loading from "../../assets/loading.svg";
+import LoadingSVG from "../../assets/loading.svg";
 
 // Components
 import Layout from "../../components/layout";
@@ -15,6 +15,7 @@ import ContentGrid from "../../components/ContentGrid";
 import FileUploader from "../../components/form/FileUploader";
 import DropdownInput from "../../components/form/DropdownInput";
 import RadioInput from "../../components/form/RadioInput";
+import Loading from "../../components/layout/Loading";
 
 // Util
 import getToday from "../../util/getToday";
@@ -49,11 +50,15 @@ const New = () => {
   const [disabledForm, setDisabledForm] = useState(false);
   const uploadImage = useUploadImage();
   const auth = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const todayDate = getToday();
     setToday(todayDate);
     setDate(todayDate);
+    if (checkIfAdmin(auth)) {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -143,8 +148,7 @@ const New = () => {
     }
   };
 
-  checkIfAdmin(auth);
-
+  if (loading) return <Loading />;
   return (
     <Layout>
       <div className="mr-10px">
@@ -154,7 +158,7 @@ const New = () => {
             onClick={handleSubmit}
             disabled={disabledForm}
           >
-            {disabledForm ? <Loading className="w-6 h-6" /> : "Add Project"}
+            {disabledForm ? <LoadingSVG className="w-6 h-6" /> : "Add Project"}
           </button>
         </div>
         <TextInput

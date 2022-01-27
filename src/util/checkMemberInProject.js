@@ -10,7 +10,11 @@ const checkMemberInProject = (auth, project) => {
   if (!tempProjects) {
     toast.info("You Are Not Member Or Manager In This Project");
     Router.push("/dashboard");
+
+    return false;
   }
+
+  return true;
 };
 
 export default checkMemberInProject;

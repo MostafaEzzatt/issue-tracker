@@ -19,6 +19,7 @@ import Loading from "../../../components/layout/Loading";
 // Custom Hook
 import useGetTicket from "../../../hooks/useGetTicket";
 import useGetProject from "../../../hooks/useGetProject";
+import useGetAllProjects from "../../../hooks/useGetAllProjects";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -27,6 +28,9 @@ import { useSelector } from "react-redux";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { firestore } from "../../../firebase";
+
+// Utils
+import getManagerProjects from "../../../util/getManagerProjects";
 
 const Edit = () => {
   const router = useRouter();
@@ -45,18 +49,36 @@ const Edit = () => {
   const [assignedTo, setAssignedTo] = useState([]);
   const [disabledForm, setDisabledForm] = useState(false);
   const users = useSelector((state) => state.users.users);
-  const projects = useSelector((state) => state.projects);
+  const {
+    projects,
+    loading: ProjectsLoading,
+    error: ProjectsError,
+  } = useGetAllProjects();
+  const auth = useSelector((state) => state.auth);
+  const [projectsList, setProjectsList] = useState([]);
 
   useEffect(() => {
-    if (getProject) {
+    if (ticket && auth) {
+      if (
+        auth.user.role !== "manager" &&
+        auth.user.uuid !== ticket.author.uuid
+      ) {
+        Router.push(`/tickets/${id}`);
+      }
+    }
+  }, [auth, ticket]);
+
+  useEffect(() => {
+    if (getProject && projects.length > 0 && !projectLoading) {
       setProject(getProject);
       setTitle(ticket.title);
       setDescription(ticket.description);
       setSource(ticket.source);
       setPriority(ticket.priority);
       setAssignedTo(ticket.assignedTo.map((user) => user.uuid));
+      setProjectsList(getManagerProjects(auth, projects));
     }
-  }, [getProject]);
+  }, [getProject, projectLoading, projects]);
 
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -138,7 +160,7 @@ const Edit = () => {
         <div className="mb-10px">
           <span className="font-medium text-sm block">Project</span>
           <DropdownInput
-            list={projects.data}
+            list={projectsList}
             setData={setProject}
             field="title"
             idField="id"

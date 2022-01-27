@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Router from "next/router";
 
 // Components
@@ -16,6 +16,7 @@ import Loading from "../../assets/loading.svg";
 
 // Util
 import getToday from "../../util/getToday";
+import getManagerProjects from "../../util/getManagerProjects";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -27,6 +28,10 @@ import { firestore } from "../../firebase";
 // React Toastify
 import { toast } from "react-toastify";
 
+// Custom Hooks
+import useUserVisitedTicketAction from "../../hooks/useUserVisitedTicketAction";
+import useGetAllProjects from "../../hooks/useGetAllProjects";
+
 const New = () => {
   const [project, setProject] = useState(null);
   const [title, setTitle] = useState("");
@@ -35,9 +40,17 @@ const New = () => {
   const [priority, setPriority] = useState("");
   const [assignedTo, setAssignedTo] = useState([]);
   const [disabledForm, setDisabledForm] = useState(false);
+  const [projectsList, setProjectsList] = useState([]);
   const users = useSelector((state) => state.users.users);
   const auth = useSelector((state) => state.auth);
-  const projects = useSelector((state) => state.projects);
+  const { projects, loading, error } = useGetAllProjects();
+  const visited = useUserVisitedTicketAction();
+
+  useEffect(() => {
+    if (projects.length > 0 && !loading) {
+      setProjectsList(getManagerProjects(auth, projects));
+    }
+  }, [projects, loading, auth]);
 
   const handleTitle = (e) => {
     setTitle(e.target.value);
@@ -83,7 +96,8 @@ const New = () => {
     }
 
     addDoc(addTicketDocRef, ticketObject)
-      .then(() => {
+      .then((data) => {
+        visited(data, auth);
         toast.success("Ticket Created");
         Router.push("/tickets");
       })
@@ -111,7 +125,7 @@ const New = () => {
         <div className="mb-10px">
           <span className="font-medium text-sm block">Project</span>
           <DropdownInput
-            list={projects.data}
+            list={projectsList}
             setData={setProject}
             field="title"
             idField="id"

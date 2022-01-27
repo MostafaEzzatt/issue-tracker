@@ -35,7 +35,7 @@ import { toast } from "react-toastify";
 const Edit = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { project, loading, error: projectError } = useGetProject(id);
+  const { project, loading: projectLoading, error } = useGetProject(id);
   const uploadImage = useUploadImage();
 
   const [title, setTitle] = useState("");
@@ -53,6 +53,7 @@ const Edit = () => {
   const [projectIconURL, setProjectIconURL] = useState("");
   const [disabledForm, setDisabledForm] = useState(false);
   const auth = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (project && auth.user.role !== "member") {
@@ -69,9 +70,11 @@ const Edit = () => {
     }
     setManagerList(users.users.filter((user) => user.role == "manager"));
 
-    if (auth.user.role == "member") {
+    if (auth.isLoggedIn && auth.user.role == "member") {
       toast.info("Manager And Admin only Can Do This");
       Router.push(`/project/${id}`);
+    } else {
+      setLoading(false);
     }
   }, [project, users, auth]);
 
@@ -125,7 +128,8 @@ const Edit = () => {
       uploadImage(id, projectIcon);
     }
   };
-  if (loading) return <Loading />;
+
+  if (projectLoading || loading) return <Loading />;
   return (
     <Layout>
       <div className="mr-10px">

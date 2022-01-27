@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 // Components
 import Layout from "../../components/layout";
 import TicketCard from "../../components/ticket/TicketCard";
@@ -11,29 +12,49 @@ import { useSelector } from "react-redux";
 
 // Custom Hooks
 import useGetTickets from "../../hooks/useGetTickets";
+import useGetAllProjects from "../../hooks/useGetAllProjects";
+
+// Util
+import getManagerProjects from "../../util/getManagerProjects";
 
 const Tickets = () => {
   const { tickets, loading, error } = useGetTickets();
   const [filteredTickets, setFilteredTickets] = useState([]);
-  const projects = useSelector((state) => state.projects);
+  const {
+    projects,
+    error: projectsErrors,
+    loading: projectsLoading,
+  } = useGetAllProjects();
   const [projectFilter, setProjectFilter] = useState({ title: "All" });
   const [projectList, setProjectList] = useState([]);
+  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
+    const tempTickets = tickets.filter(
+      (ticket) =>
+        projectList.findIndex((project) => project.id == ticket.project.id) !==
+        -1
+    );
+
     if (projectFilter.title == "All") {
-      setFilteredTickets(tickets);
+      setFilteredTickets(tempTickets);
     } else {
       setFilteredTickets(
         tickets.filter((ticket) => ticket.project.id == projectFilter.id)
       );
     }
-  }, [projectFilter, tickets]);
+  }, [projectFilter, tickets, projectList]);
 
   useEffect(() => {
-    setProjectList([{ id: "all", title: "All" }, ...projects.data]);
+    if (!projectsLoading) {
+      setProjectList([
+        { id: "all", title: "All" },
+        ...getManagerProjects(auth, projects),
+      ]);
+    }
   }, [projects]);
 
-  if (loading) return <Loading />;
+  if (loading || projectsLoading) return <Loading />;
   if (!loading && error)
     return (
       <Layout>

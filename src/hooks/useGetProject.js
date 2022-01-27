@@ -15,34 +15,36 @@ const useGetProject = (id) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const tempProject = projects.filter((data) => data.id == id);
+    if (projects.length > 0) {
+      const tempProject = projects.filter((data) => data.id == id);
 
-    if (tempProject.length == 0) {
-      setError("Cannot Find This Project");
-      setLoading(false);
-    } else {
-      const managerId = tempProject[0].manager.id;
-      const manager = users.users.filter((user) => user.uuid == managerId);
-      const endAt = calcEstimatedDays(
-        tempProject[0].createdAt,
-        tempProject[0].timeEstimated
-      );
+      if (tempProject.length == 0) {
+        setError("Cannot Find This Project");
+        setLoading(false);
+      } else {
+        const managerId = tempProject[0].manager.id;
+        const manager = users.users.filter((user) => user.uuid == managerId);
+        const endAt = calcEstimatedDays(
+          tempProject[0].createdAt,
+          tempProject[0].timeEstimated
+        );
 
-      const members = users.users.filter(
-        (user) =>
-          tempProject[0].members.findIndex(
-            (member) => member.id == user.uuid
-          ) !== -1
-      );
+        const members = users.users.filter(
+          (user) =>
+            tempProject[0].members.findIndex(
+              (member) => member.id == user.uuid
+            ) !== -1
+        );
 
-      setLoading(false);
-      setError(false);
-      setProject(
-        Object.assign(
-          { ...tempProject[0] },
-          { manager: manager[0], endAt, members }
-        )
-      );
+        setLoading(false);
+        setError(false);
+        setProject(
+          Object.assign(
+            { ...tempProject[0] },
+            { manager: manager[0], endAt, members }
+          )
+        );
+      }
     }
   }, [projects, id]);
 

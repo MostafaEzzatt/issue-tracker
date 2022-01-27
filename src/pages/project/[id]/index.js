@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -29,22 +29,28 @@ import checkMemberInProject from "../../../util/checkMemberInProject";
 const SingleProject = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { project, loading, error } = useGetProject(id);
+  const { project, loading: projectLoading, error } = useGetProject(id);
   const {
     tickets,
     loading: ticketsIsLoading,
     error: TicketsError,
   } = useGetProjectTickets(id);
   const auth = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
+  const [showToast, setShowToast] = useState(true);
 
   useEffect(() => {
-    if (project && auth) {
-      checkMemberInProject(auth, project);
+    if (project && auth && showToast) {
+      if (checkMemberInProject(auth, project)) {
+        setLoading(false);
+      } else {
+        setShowToast(false);
+      }
     }
   }, [project, auth]);
 
-  if (loading || ticketsIsLoading) return <Loading />;
-  if (!loading && !ticketsIsLoading && error)
+  if (loading || projectLoading || ticketsIsLoading) return <Loading />;
+  if (!loading && !projectLoading && !ticketsIsLoading && error)
     return (
       <Layout>
         <ErrorBlock message={error} />
@@ -98,7 +104,7 @@ const SingleProject = () => {
           {project.description}
         </p>
 
-        <SectionTitle title="Manager" />
+        <SectionTitle title="Members" />
         <ContentGrid>
           {project.members.length &&
             project.members.map((user) => (
