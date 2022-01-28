@@ -11,6 +11,7 @@ import ContentGrid from "../../../components/ContentGrid";
 import DisplayUserBlock from "../../../components/user/DisplayUserBlock";
 import Loading from "../../../components/layout/Loading";
 import ErrorBlock from "../../../components/shared/ErrorBlock";
+import TicketCard from "../../../components/ticket/TicketCard";
 
 // Custome Hooks
 import useGetProject from "../../../hooks/useGetProject";
@@ -18,13 +19,16 @@ import useGetProjectTickets from "../../../hooks/useGetProjectTickets";
 
 // Assets
 import Pencil from "../../../assets/pen.svg";
-import TicketCard from "../../../components/ticket/TicketCard";
+import PaperClip from "../../../assets/paperClip.svg";
 
 // Redux
 import { useSelector } from "react-redux";
 
 // Util
 import checkMemberInProject from "../../../util/checkMemberInProject";
+import filterPinnedProjects from "../../../util/filterPinnedProjects";
+import pinProject from "../../../util/pinProject";
+import checkIfProjectPinned from "../../../util/checkIfProjectPinned";
 
 const SingleProject = () => {
   const router = useRouter();
@@ -36,8 +40,10 @@ const SingleProject = () => {
     error: TicketsError,
   } = useGetProjectTickets(id);
   const auth = useSelector((state) => state.auth);
+  const actions = useSelector((state) => state.actions);
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(true);
+  const [isPinned, setIsPinned] = useState(false);
 
   useEffect(() => {
     if (project && auth && showToast) {
@@ -48,6 +54,21 @@ const SingleProject = () => {
       }
     }
   }, [project, auth]);
+
+  useEffect(() => {
+    const filteredPinnedProjects = filterPinnedProjects(actions.data);
+    if (filteredPinnedProjects.length > 0) {
+      const checkIfPinned = checkIfProjectPinned(id, filteredPinnedProjects);
+      setIsPinned(checkIfPinned);
+    } else {
+      setIsPinned(false);
+    }
+  }, [actions, id]);
+
+  const handlePinProject = () => {
+    const pinnedProjectsList = filterPinnedProjects(actions.data);
+    pinProject(id, pinnedProjectsList, auth);
+  };
 
   if (loading || projectLoading || ticketsIsLoading) return <Loading />;
   if (!loading && !projectLoading && !ticketsIsLoading && error)
@@ -60,15 +81,26 @@ const SingleProject = () => {
   return (
     <Layout>
       <div className="mr-10 relative">
-        {auth.user.role !== "member" && (
-          <div className="absolute -top-8 -right-10 w-8 h-8 rounded-bl bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
+        <div className="absolute -top-8 -right-10 rounded-bl flex justify-center items-center gap-2">
+          <button
+            className={`w-8 h-8 ${
+              isPinned
+                ? "bg-dodger-blue hover:bg-moody-blue border-dodger-blue hover:border-moody-blue text-silver"
+                : "bg-silver hover:bg-alto border-alto text-cod-gray"
+            }  transition-colors border border-solid `}
+            onClick={handlePinProject}
+          >
+            <PaperClip className="w-5 h-5 mx-auto" />
+          </button>
+
+          {auth.user.role !== "member" && (
             <Link href={`${id}/edit`}>
-              <a className="text-white cursor-pointer">
+              <a className="text-white cursor-pointer w-8 h-8 bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
                 <Pencil className="w-6 h-6" />
               </a>
             </Link>
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-2 max-w-full">
           {project.icon && (

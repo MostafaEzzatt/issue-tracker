@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import getMemberProjects from "../util/getMemberProjects";
 import getManagerProjects from "../util/getManagerProjects";
 import useGetNotVisitedTickets from "../hooks/useGetNotVisitedTickets";
+import useGetPinnedProjects from "../hooks/useGetPinnedProjects";
 
 export default function Dashboard() {
   const { projects, loading, error } = useGetAllProjects();
@@ -32,6 +33,8 @@ export default function Dashboard() {
     error: ticketsError,
   } = useGetNotVisitedTickets();
   const auth = useSelector((state) => state.auth);
+  const { pinnedProjects, pinnedProjectsLoading, pinnedProjectsError } =
+    useGetPinnedProjects();
 
   useEffect(() => {
     if (auth.user.role == "member") {
@@ -53,15 +56,21 @@ export default function Dashboard() {
 
       <Layout>
         <SectionTitle title="Pinned Project" />
-        <ContentGrid>
-          <ProjectSmallCard
-            img="https://i.pravatar.cc/25"
-            name="Redit"
-            description="Reddit is a network of communities where people can dive into their
-        interests, hobbies and passions. There's a community for whatever you're
-        interested in on Reddit."
-          />
-        </ContentGrid>
+        {!pinnedProjectsLoading && pinnedProjects.length > 0 ? (
+          <ContentGrid>
+            {pinnedProjects.map((project) => (
+              <ProjectSmallCard
+                key={project.id}
+                id={project.id}
+                img={project.icon}
+                name={project.title}
+                description={project.title}
+              />
+            ))}
+          </ContentGrid>
+        ) : (
+          <ErrorBlock message={pinnedProjectsError} />
+        )}
 
         <SectionTitle title="New Tickets" />
         {!ticketsLoading && tickets.length > 0 ? (

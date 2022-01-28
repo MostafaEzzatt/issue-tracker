@@ -12,6 +12,7 @@ module.exports = {
       spacing: {
         "10px": "10px",
         titleWidth: "calc(100% - 100px)",
+        minTitleWidth: "calc(100% - 56px)",
       },
       colors: {
         "cod-gray": "#0F0F0F",

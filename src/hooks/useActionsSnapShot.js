@@ -1,8 +1,15 @@
 import { useEffect } from "react";
 
 // Firebase
-import { firestore } from "../firebase";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { auth, firestore } from "../firebase";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -15,9 +22,13 @@ import {
 const useActionsSnapShot = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const commentsCollectionRef = collection(firestore, "Actions");
+    const actionsCollectionRef = collection(firestore, "Actions");
+    const actionQueryRef = query(
+      actionsCollectionRef,
+      where("user", "==", doc(firestore, "Users", auth.currentUser.uid))
+    );
 
-    const commentsSnapShot = onSnapshot(commentsCollectionRef, {
+    const actionsSnapShot = onSnapshot(actionQueryRef, {
       next: (snap) => {
         snap.docChanges().map((change) => {
           const action = {
@@ -36,7 +47,7 @@ const useActionsSnapShot = () => {
     });
 
     return () => {
-      commentsSnapShot();
+      actionsSnapShot();
     };
   }, []);
 };
