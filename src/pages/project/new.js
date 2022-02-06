@@ -154,11 +154,11 @@ const New = () => {
       <div className="mr-10px">
         <div className="flex justify-end">
           <button
-            className="px-2 py-1 rounded bg-dodger-blue hover:bg-moody-blue transition-colors text-white disabled:bg-scorpion"
+            className="rounded bg-dodger-blue px-2 py-1 text-white transition-colors hover:bg-moody-blue disabled:bg-scorpion"
             onClick={handleSubmit}
             disabled={disabledForm}
           >
-            {disabledForm ? <LoadingSVG className="w-6 h-6" /> : "Add Project"}
+            {disabledForm ? <LoadingSVG className="h-6 w-6" /> : "Add Project"}
           </button>
         </div>
         <TextInput

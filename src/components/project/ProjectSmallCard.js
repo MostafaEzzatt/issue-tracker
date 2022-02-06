@@ -8,8 +8,8 @@ const ProjectSmallCard = ({ id, img, name, description }) => {
   return (
     <Link href={`project/${id}`}>
       <a className="col-span-2">
-        <div className="w-full h-full p-10px bg-white shadow-sm hover:shadow-md group cursor-pointer">
-          <div className="flex justify-between items-center pb-10px border-b border-solid border-black/5">
+        <div className="group h-full w-full cursor-pointer bg-white p-10px shadow-sm hover:shadow-md">
+          <div className="flex items-center justify-between border-b border-solid border-black/5 pb-10px">
             <div>
               {img ? (
                 <Image
@@ -17,19 +17,19 @@ const ProjectSmallCard = ({ id, img, name, description }) => {
                   alt={name}
                   width={24}
                   height={24}
-                  className="rounded-full inline-block"
+                  className="inline-block rounded-full"
                 />
               ) : (
-                <div className="w-6 h-6 bg-alto rounded-full inline-block"></div>
+                <div className="inline-block h-6 w-6 rounded-full bg-alto"></div>
               )}
 
-              <h2 className="font-semibold text-cod-gray truncate break-words capitalize w-minTitleWidth inline-block ml-2">
+              <h2 className="ml-2 inline-block w-minTitleWidth truncate break-words font-semibold capitalize text-cod-gray">
                 {name}
               </h2>
             </div>
-            <ArrowNarrowRight className="min-w-[24px] w-6 block text-moody-blue/30 group-hover:text-moody-blue" />
+            <ArrowNarrowRight className="block w-6 min-w-[24px] text-moody-blue/30 group-hover:text-moody-blue" />
           </div>
-          <p className="mt-10px text-scorpion text-sm">
+          <p className="mt-10px text-sm text-scorpion">
             {description.length > 100
               ? `${description.substring(0, 99)} ...`
               : description}

@@ -135,10 +135,10 @@ export default function Signup({ changeFrom }) {
 
   return (
     <>
-      <h1 className="text-4xl pb-10px border-b border-solid border-black/10 w-96 mb-8 text-center font-bold">
+      <h1 className="mb-8 w-96 border-b border-solid border-black/10 pb-10px text-center text-4xl font-bold">
         Sign Up
       </h1>
-      <div className="w-96 bg-white shadow-sm py-5 px-10px space-y-4 rounded">
+      <div className="w-96 space-y-4 rounded bg-white py-5 px-10px shadow-sm">
         <form onSubmit={handleSubmit}>
           <TextInput
             label="Display Name:"
@@ -161,17 +161,17 @@ export default function Signup({ changeFrom }) {
 
           <button
             type="submit"
-            className="w-full mt-5 bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion transition-colors py-10px text-sm font-semibold text-white rounded"
+            className="mt-5 w-full rounded bg-dodger-blue py-10px text-sm font-semibold text-white transition-colors hover:bg-moody-blue disabled:bg-scorpion"
             disabled={submitted}
           >
-            {submitted ? <Loading className="w-5 h-5 mx-auto" /> : "Sign Up"}
+            {submitted ? <Loading className="mx-auto h-5 w-5" /> : "Sign Up"}
           </button>
         </form>
       </div>
-      <div className="mt-2 text-scorpion font-medium">
+      <div className="mt-2 font-medium text-scorpion">
         Already Have Account?{" "}
         <button
-          className="text-cod-gray font-semibold hover:text-dodger-blue transition-colors outline-none"
+          className="font-semibold text-cod-gray outline-none transition-colors hover:text-dodger-blue"
           onClick={() => changeFrom("signin")}
         >
           Sign In Here

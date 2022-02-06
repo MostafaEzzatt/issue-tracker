@@ -1,7 +1,7 @@
 const Loading = () => {
   return (
     <>
-      <div className="w-full h-screen flex justify-center items-center text-scorpion">
+      <div className="flex h-screen w-full items-center justify-center text-scorpion">
         <svg
           version="1.1"
           x="0px"

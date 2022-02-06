@@ -6,17 +6,17 @@ const TicketCard = ({ id, title, description, priority, assignedBy }) => {
   return (
     <Link href={`/tickets/${id}`}>
       <a className="col-span-2">
-        <div className="h-full p-10px shadow-sm hover:shadow-md cursor-pointer bg-white">
-          <div className="pb-10px border-b border-solid border-black/5">
+        <div className="h-full cursor-pointer bg-white p-10px shadow-sm hover:shadow-md">
+          <div className="border-b border-solid border-black/5 pb-10px">
             <div className="flex justify-between">
-              <h2 className="font-semibold text-cod-gray flex-auto truncate">
+              <h2 className="flex-auto truncate font-semibold text-cod-gray">
                 {title}
               </h2>
               <Stamp type={priority} />
             </div>
 
             <div>
-              <span className="text-dodger-blue mt-1">Assigned By:</span>{" "}
+              <span className="mt-1 text-dodger-blue">Assigned By:</span>{" "}
               {assignedBy}
             </div>
           </div>

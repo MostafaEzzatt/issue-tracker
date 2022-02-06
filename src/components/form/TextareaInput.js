@@ -1,17 +1,17 @@
 const Textarea = ({ label, error, value, handleChange }) => {
   return (
     <>
-      <label className="font-medium text-sm block">
+      <label className="block text-sm font-medium">
         {label}
 
         <textarea
           value={value}
           onChange={handleChange}
-          className="bg-silver border border-solid block border-alto rounded
-        w-full py-10px text-cod-gray pl-10px mt-10px"
+          className="mt-10px block w-full rounded border border-solid
+        border-alto bg-silver py-10px pl-10px text-cod-gray"
         ></textarea>
       </label>
-      <div className="bg-red-100 font-medium mt-1 rounded px-10px text-cod-gray">
+      <div className="mt-1 rounded bg-red-100 px-10px font-medium text-cod-gray">
         {error}
       </div>
     </>

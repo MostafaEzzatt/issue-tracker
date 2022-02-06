@@ -60,6 +60,10 @@ const Index = () => {
     }
   }, [ticket, projects, projectsLoading, actions]);
 
+  if (!router.isFallback) {
+    return <Loading />;
+  }
+
   if (loading && !error) return <Loading />;
   if (!loading && error)
     return (
@@ -70,12 +74,14 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="relative mr-10px">
-        {auth.user.role == "manager" || ticket.author.uuid == auth.user.uuid ? (
-          <div className="absolute -top-8 -right-10px w-8 h-8 rounded-bl bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
+      <div className="mr-10px relative">
+        {auth.user.role == "manager" ||
+        ticket.author.uuid == auth.user.uuid ||
+        auth.user.role == "admin" ? (
+          <div className="-right-10px absolute -top-8 flex h-8 w-8 items-center justify-center rounded-bl bg-green-500 shadow-sm transition-all hover:bg-green-600 hover:shadow-md">
             <Link href={`${id}/edit`}>
-              <a className="text-white cursor-pointer">
-                <Pencil className="w-6 h-6" />
+              <a className="cursor-pointer text-white">
+                <Pencil className="h-6 w-6" />
               </a>
             </Link>
           </div>
@@ -83,7 +89,7 @@ const Index = () => {
           ""
         )}
 
-        <h3 className="text-title font-semibold text-cod-gray break-words">
+        <h3 className="text-title text-cod-gray break-words font-semibold">
           {ticket.title}
         </h3>
 
@@ -92,7 +98,7 @@ const Index = () => {
           {ticket.author.displayName}
         </div>
 
-        <p className="text-sm sm:text-base text-scorpion">
+        <p className="text-scorpion text-sm sm:text-base">
           {ticket.description}
         </p>
 

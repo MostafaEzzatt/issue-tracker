@@ -61,7 +61,8 @@ const Edit = () => {
     if (ticket && auth) {
       if (
         auth.user.role !== "manager" &&
-        auth.user.uuid !== ticket.author.uuid
+        auth.user.uuid !== ticket.author.uuid &&
+        auth.user.role !== "admin"
       ) {
         Router.push(`/tickets/${id}`);
       }
@@ -131,11 +132,14 @@ const Edit = () => {
       });
   };
 
+  if (!router.isFallback) {
+    return <Loading />;
+  }
   if (loading && projectLoading && !error && !projectError) return <Loading />;
   if ((!loading && !projectLoading && error) || projectError)
     return (
       <Layout>
-        <p className="font-bold text-center text-scorpion">
+        <p className="text-scorpion text-center font-bold">
           Something Went Wrong While Fetching This Ticket Data
         </p>
       </Layout>
@@ -145,12 +149,12 @@ const Edit = () => {
       <div className="mr-10px">
         <div className="flex justify-end">
           <button
-            className="px-2 py-1 rounded bg-dodger-blue hover:bg-moody-blue transition-colors text-white disabled:bg-scorpion"
+            className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
             onClick={handleSubmit}
             disabled={disabledForm}
           >
             {disabledForm ? (
-              <LoadingSVG className="w-6 h-6" />
+              <LoadingSVG className="h-6 w-6" />
             ) : (
               "Update Ticket"
             )}
@@ -158,7 +162,7 @@ const Edit = () => {
         </div>
 
         <div className="mb-10px">
-          <span className="font-medium text-sm block">Project</span>
+          <span className="block text-sm font-medium">Project</span>
           <DropdownInput
             list={projectsList}
             setData={setProject}

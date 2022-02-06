@@ -114,16 +114,16 @@ const New = () => {
       <div className="mr-10px">
         <div className="flex justify-end">
           <button
-            className="px-2 py-1 rounded bg-dodger-blue hover:bg-moody-blue transition-colors text-white disabled:bg-scorpion"
+            className="rounded bg-dodger-blue px-2 py-1 text-white transition-colors hover:bg-moody-blue disabled:bg-scorpion"
             onClick={handleSubmit}
             disabled={disabledForm}
           >
-            {disabledForm ? <Loading className="w-6 h-6" /> : "Add Ticket"}
+            {disabledForm ? <Loading className="h-6 w-6" /> : "Add Ticket"}
           </button>
         </div>
 
         <div className="mb-10px">
-          <span className="font-medium text-sm block">Project</span>
+          <span className="block text-sm font-medium">Project</span>
           <DropdownInput
             list={projectsList}
             setData={setProject}

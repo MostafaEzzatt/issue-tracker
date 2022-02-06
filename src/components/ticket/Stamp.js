@@ -1,7 +1,7 @@
 const Stamp = ({ type }) => {
   return (
     <div
-      className={`px-2 py-[3px] capitalize max-w-max rounded-full text-xs font-medium ${type}`}
+      className={`max-w-max rounded-full px-2 py-[3px] text-xs font-medium capitalize ${type}`}
     >
       {type}
     </div>

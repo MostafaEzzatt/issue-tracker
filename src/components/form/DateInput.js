@@ -3,7 +3,7 @@ import React from "react";
 const DateInput = ({ label, error, value, min, handleChange }) => {
   return (
     <>
-      <label className="font-medium text-sm block">
+      <label className="block text-sm font-medium">
         {label}
 
         <input
@@ -11,10 +11,10 @@ const DateInput = ({ label, error, value, min, handleChange }) => {
           value={value}
           min={min}
           onChange={handleChange}
-          className="block mt-10px"
+          className="mt-10px block"
         />
       </label>
-      <div className="bg-red-100 font-medium mt-1 rounded px-10px text-cod-gray">
+      <div className="mt-1 rounded bg-red-100 px-10px font-medium text-cod-gray">
         {error}
       </div>
     </>

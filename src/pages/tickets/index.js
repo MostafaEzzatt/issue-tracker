@@ -46,11 +46,17 @@ const Tickets = () => {
   }, [projectFilter, tickets, projectList]);
 
   useEffect(() => {
+    const selectAllObject = { id: "all", title: "All" };
+
     if (!projectsLoading) {
-      setProjectList([
-        { id: "all", title: "All" },
-        ...getManagerProjects(auth, projects),
-      ]);
+      if (auth.user.role == "admin") {
+        setProjectList([selectAllObject, ...projects]);
+      } else {
+        setProjectList([
+          selectAllObject,
+          ...getManagerProjects(auth, projects),
+        ]);
+      }
     }
   }, [projects]);
 
@@ -58,7 +64,7 @@ const Tickets = () => {
   if (!loading && error)
     return (
       <Layout>
-        <div className="bg-white mr-10px shadow-sm text-center font-bold py-6 text-scorpion">
+        <div className="mr-10px bg-white py-6 text-center font-bold text-scorpion shadow-sm">
           {error}
         </div>
       </Layout>
@@ -66,7 +72,7 @@ const Tickets = () => {
 
   return (
     <Layout>
-      <div className="w-5/6 flex justify-center items-center gap-3 mx-auto">
+      <div className="mx-auto flex w-5/6 items-center justify-center gap-3">
         <span className="font-medium">Project</span>
         <DropdownInput
           list={projectList}

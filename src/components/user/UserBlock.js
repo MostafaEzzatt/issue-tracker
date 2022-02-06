@@ -5,7 +5,7 @@ import addRemoveUserFromList from "../../util/addRemoveUserFromList";
 
 const UserBlock = ({ usersList, setUsersList, user }) => {
   return (
-    <div className="col-span-2 p-10px shadow-sm hover:shadow-md cursor-pointer bg-white flex justify-between">
+    <div className="col-span-2 flex cursor-pointer justify-between bg-white p-10px shadow-sm hover:shadow-md">
       {user.displayName}
 
       <button
@@ -13,15 +13,15 @@ const UserBlock = ({ usersList, setUsersList, user }) => {
           usersList?.includes(user.uuid)
             ? "bg-red-400 hover:bg-red-600"
             : "bg-dodger-blue hover:bg-moody-blue"
-        } transition-colors rounded flex justify-center items-center text-white`}
+        } flex items-center justify-center rounded text-white transition-colors`}
         onClick={() =>
           addRemoveUserFromList(user.uuid, usersList, setUsersList)
         }
       >
         {usersList?.includes(user.uuid) ? (
-          <Minus className="w-5 h-5" />
+          <Minus className="h-5 w-5" />
         ) : (
-          <Plus className="w-5 h-5" />
+          <Plus className="h-5 w-5" />
         )}
       </button>
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // Components
 import SignUp from "../components/form/SignUp";
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <NotAuthorized>
       <>
-        <div className="w-full h-screen flex flex-col items-center justify-center">
+        <div className="flex h-screen w-full flex-col items-center justify-center">
           {form == "signup" ? (
             <SignUp changeFrom={setForm} />
           ) : (

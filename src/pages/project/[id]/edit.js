@@ -130,17 +130,20 @@ const Edit = () => {
   };
 
   if (projectLoading || loading) return <Loading />;
+  if (!router.isFallback) {
+    return <Loading />;
+  }
   return (
     <Layout>
       <div className="mr-10px">
         <div className="flex justify-end">
           <button
-            className="px-2 py-1 rounded bg-dodger-blue hover:bg-moody-blue transition-colors text-white disabled:bg-scorpion"
+            className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
             onClick={handleSubmit}
             disabled={disabledForm}
           >
             {disabledForm ? (
-              <LoadingSVG className="w-6 h-6" />
+              <LoadingSVG className="h-6 w-6" />
             ) : (
               "Update Project"
             )}

@@ -41,22 +41,22 @@ const DropdownInput = ({
 
   return (
     <div
-      className="border border-scorpion rounded py-3 px-3 mt-10px flex justify-between group group-hover:border-cod-gray cursor-pointer relative w-full"
+      className="group relative mt-10px flex w-full cursor-pointer justify-between rounded border border-scorpion py-3 px-3 group-hover:border-cod-gray"
       onClick={() => setIsOpen(!isOpen)}
       ref={menuRef}
     >
       <span>{selected}</span>
-      <ArrowDown className="w-5 h-5 text-scorpion group-hover:text-cod-gray pointer-events-none" />
+      <ArrowDown className="pointer-events-none h-5 w-5 text-scorpion group-hover:text-cod-gray" />
       <div
         className={`${
           isOpen ? "absolute" : "hidden"
-        } top-full left-0 right-0 rounded py-1 px-1 mt-10px bg-silver shadow-md`}
+        } top-full left-0 right-0 mt-10px rounded bg-silver py-1 px-1 shadow-md`}
       >
         {list.length > 0 ? (
           <ul className="divide-y">
             {list.map((item) => (
               <li
-                className="py-3 hover:bg-dodger-blue hover:text-silver font-medium transition-colors px-3 break-words"
+                className="break-words py-3 px-3 font-medium transition-colors hover:bg-dodger-blue hover:text-silver"
                 key={item[idField]}
                 onClick={() => handleClick(item)}
               >
@@ -65,7 +65,7 @@ const DropdownInput = ({
             ))}
           </ul>
         ) : (
-          <p className="text-scorpion font-bold text-center py-3">
+          <p className="py-3 text-center font-bold text-scorpion">
             There Is Not Managers Yet
           </p>
         )}

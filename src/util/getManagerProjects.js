@@ -3,7 +3,8 @@ function getManagerProjects(auth, fetchProjects) {
     (project) =>
       project.manager.uuid == auth.user.uuid ||
       project.members.findIndex((member) => member.uuid == auth.user.uuid) !==
-        -1
+        -1 ||
+      auth.user.role == "admin"
   );
 
   return tempProjects;

@@ -26,8 +26,8 @@ const ProjectCard = ({
     <li>
       <Link href={`/project/${id}`}>
         <a>
-          <div className="w-full bg-white p-10px drop-shadow-sm hover:shadow-lg transition-shadow">
-            <div className="pb-10px border-b border-solid border-black/5">
+          <div className="w-full bg-white p-10px drop-shadow-sm transition-shadow hover:shadow-lg">
+            <div className="border-b border-solid border-black/5 pb-10px">
               <div className="flex items-center gap-x-2">
                 {img ? (
                   <Image
@@ -41,7 +41,7 @@ const ProjectCard = ({
                   <FakeIcon />
                 )}
 
-                <h3 className="text-3xl font-semibold truncate capitalize w-titleWidth">
+                <h3 className="w-titleWidth truncate text-3xl font-semibold capitalize">
                   {title}
                 </h3>
                 <Stamp type={state} />
@@ -73,7 +73,7 @@ const ProjectCard = ({
 
 const FakeIcon = () => {
   return (
-    <div className="w-[50px] h-[50px] w-full bg-silver rounded-full"></div>
+    <div className="h-[50px] w-[50px] w-full rounded-full bg-silver"></div>
   );
 };
 

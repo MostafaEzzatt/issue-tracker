@@ -18,28 +18,28 @@ const Layout = ({ children }) => {
   return (
     <Authorized>
       <div
-        className={`w-full h-screen relative grid xl:grid-cols-12 md:grid-cols-9 sm:grid-cols-6 grid-cols-2 gap-[10px] ${
+        className={`relative grid h-screen w-full grid-cols-2 gap-[10px] sm:grid-cols-6 md:grid-cols-9 xl:grid-cols-12 ${
           toggleNav && "max-h-screen overflow-hidden"
         }`}
       >
         <button
-          className="absolute left-0 top-10px bg-white shadow-sm cursor-pointer visible sm:hidden z-50"
+          className="visible absolute top-10px left-0 z-50 cursor-pointer bg-white shadow-sm sm:hidden"
           onClick={() => setToggleNav(!toggleNav)}
         >
           {toggleNav ? (
-            <Close className="w-6 h-6" />
+            <Close className="h-6 w-6" />
           ) : (
-            <ArrowRight className="w-6 h-6" />
+            <ArrowRight className="h-6 w-6" />
           )}
         </button>
         <div
-          className={`md:col-span-3 col-span-2 w-full z-40 absolute sm:static top-0 ${
+          className={`absolute top-0 z-40 col-span-2 w-full sm:static md:col-span-3 ${
             toggleNav ? "left-0" : "-left-full"
           } transition-all`}
         >
           <Nav />
         </div>
-        <div className="col-span-2 sm sm:col-span-4 md:col-span-6 xl:col-span-9 pt-8 ml-10px sm:ml-0">
+        <div className="sm col-span-2 ml-10px pt-8 sm:col-span-4 sm:ml-0 md:col-span-6 xl:col-span-9">
           {children}
         </div>
       </div>

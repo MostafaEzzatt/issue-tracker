@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -29,6 +29,7 @@ import checkMemberInProject from "../../../util/checkMemberInProject";
 import filterPinnedProjects from "../../../util/filterPinnedProjects";
 import pinProject from "../../../util/pinProject";
 import checkIfProjectPinned from "../../../util/checkIfProjectPinned";
+import { toast } from "react-toastify";
 
 const SingleProject = () => {
   const router = useRouter();
@@ -50,6 +51,9 @@ const SingleProject = () => {
       if (checkMemberInProject(auth, project)) {
         setLoading(false);
       } else {
+        setShowToast(true);
+        Router.push("/project");
+        toast("You Are Not Member Or Manager In This Project");
         setShowToast(false);
       }
     }
@@ -78,31 +82,34 @@ const SingleProject = () => {
       </Layout>
     );
 
+  if (!router.isFallback) {
+    return <Loading />;
+  }
   return (
     <Layout>
-      <div className="mr-10 relative">
-        <div className="absolute -top-8 -right-10 rounded-bl flex justify-center items-center gap-2">
+      <div className="relative mr-10">
+        <div className="absolute -top-8 -right-10 flex items-center justify-center gap-2 rounded-bl">
           <button
-            className={`w-8 h-8 ${
+            className={`h-8 w-8 ${
               isPinned
-                ? "bg-dodger-blue hover:bg-moody-blue border-dodger-blue hover:border-moody-blue text-silver"
-                : "bg-silver hover:bg-alto border-alto text-cod-gray"
-            }  transition-colors border border-solid `}
+                ? "border-dodger-blue bg-dodger-blue text-silver hover:border-moody-blue hover:bg-moody-blue"
+                : "border-alto bg-silver text-cod-gray hover:bg-alto"
+            }  border border-solid transition-colors `}
             onClick={handlePinProject}
           >
-            <PaperClip className="w-5 h-5 mx-auto" />
+            <PaperClip className="mx-auto h-5 w-5" />
           </button>
 
           {auth.user.role !== "member" && (
             <Link href={`${id}/edit`}>
-              <a className="text-white cursor-pointer w-8 h-8 bg-green-500 hover:bg-green-600 shadow-sm hover:shadow-md transition-all flex justify-center items-center">
-                <Pencil className="w-6 h-6" />
+              <a className="flex h-8 w-8 cursor-pointer items-center justify-center bg-green-500 text-white shadow-sm transition-all hover:bg-green-600 hover:shadow-md">
+                <Pencil className="h-6 w-6" />
               </a>
             </Link>
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-2 max-w-full">
+        <div className="flex max-w-full flex-col items-center gap-2 sm:flex-row">
           {project.icon && (
             <Image
               src={project?.icon}
@@ -112,13 +119,13 @@ const SingleProject = () => {
               className="rounded-full"
             />
           )}
-          <h3 className="text-title font-semibold flex-auto break-words w-titleWidth">
+          <h3 className="w-titleWidth text-title flex-auto break-words font-semibold">
             {project.title}
           </h3>
           <Stamp type={project.state} />
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+        <div className="flex flex-col justify-between sm:flex-row sm:items-center">
           <div>
             <span className="text-dodger-blue">@: </span> {project.createdAt}
           </div>
@@ -132,7 +139,7 @@ const SingleProject = () => {
           </div>
         </div>
 
-        <p className="text-sm text-scorpion mt-5 mb-4 md:text-base">
+        <p className="text-scorpion mt-5 mb-4 text-sm md:text-base">
           {project.description}
         </p>
 
@@ -159,7 +166,7 @@ const SingleProject = () => {
             ))}
           </ContentGrid>
         ) : (
-          <div className="mt-10px w-full text-scorpion bg-white shadow-sm text-center py-6 font-bold">
+          <div className="mt-10px text-scorpion w-full bg-white py-6 text-center font-bold shadow-sm">
             {TicketsError}
           </div>
         )}

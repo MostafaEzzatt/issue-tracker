@@ -60,7 +60,9 @@ const useGetNotVisitedTickets = () => {
         (ticket) =>
           ticket?.project.members.findIndex(
             (member) => member.uuid == auth.user.uuid
-          ) !== -1 || ticket.project.manager.uuid == auth.user.uuid
+          ) !== -1 ||
+          ticket.project.manager.uuid == auth.user.uuid ||
+          auth.user.role == "admin"
       );
 
       if (ticketsNotVisited.length > 0 && ticketsNotVisited[0] !== undefined) {

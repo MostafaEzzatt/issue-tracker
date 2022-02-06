@@ -22,33 +22,35 @@ import {
 const useActionsSnapShot = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const actionsCollectionRef = collection(firestore, "Actions");
-    const actionQueryRef = query(
-      actionsCollectionRef,
-      where("user", "==", doc(firestore, "Users", auth.currentUser.uid))
-    );
+    if (auth.currentUser) {
+      const actionsCollectionRef = collection(firestore, "Actions");
+      const actionQueryRef = query(
+        actionsCollectionRef,
+        where("user", "==", doc(firestore, "Users", auth.currentUser.uid))
+      );
 
-    const actionsSnapShot = onSnapshot(actionQueryRef, {
-      next: (snap) => {
-        snap.docChanges().map((change) => {
-          const action = {
-            action: { id: change.doc.id, ...change.doc.data() },
-          };
+      const actionsSnapShot = onSnapshot(actionQueryRef, {
+        next: (snap) => {
+          snap.docChanges().map((change) => {
+            const action = {
+              action: { id: change.doc.id, ...change.doc.data() },
+            };
 
-          if (change.type == "added") {
-            dispatch(addAction(action));
-          } else if (change.type == "modified") {
-            dispatch(updateAction(action));
-          } else if (change.type == "removed") {
-            dispatch(deleteAction(action));
-          }
-        });
-      },
-    });
+            if (change.type == "added") {
+              dispatch(addAction(action));
+            } else if (change.type == "modified") {
+              dispatch(updateAction(action));
+            } else if (change.type == "removed") {
+              dispatch(deleteAction(action));
+            }
+          });
+        },
+      });
 
-    return () => {
-      actionsSnapShot();
-    };
+      return () => {
+        actionsSnapShot();
+      };
+    }
   }, []);
 };
 

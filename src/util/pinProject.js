@@ -8,8 +8,6 @@ const pinProject = (project, pinnedProjectsList, auth) => {
     pinnedProjectsList
   );
 
-  console.log(pinnedProjectsList);
-
   const projectActionDocRef = doc(
     firestore,
     "Actions",
