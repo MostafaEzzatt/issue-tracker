@@ -60,11 +60,7 @@ const Index = () => {
     }
   }, [ticket, projects, projectsLoading, actions]);
 
-  if (!router.isFallback) {
-    return <Loading />;
-  }
-
-  if (loading && !error) return <Loading />;
+  if ((loading && !error) || router.isFallback) return <Loading />;
   if (!loading && error)
     return (
       <Layout>

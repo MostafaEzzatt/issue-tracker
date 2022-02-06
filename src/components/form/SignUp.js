@@ -23,7 +23,7 @@ import { doc, setDoc } from "firebase/firestore";
 export default function Signup({ changeFrom }) {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("passwordD2@");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState({
     displayName: "",
     email: "",
@@ -135,10 +135,10 @@ export default function Signup({ changeFrom }) {
 
   return (
     <>
-      <h1 className="mb-8 w-96 border-b border-solid border-black/10 pb-10px text-center text-4xl font-bold">
+      <h1 className="pb-10px mb-8 w-96 border-b border-solid border-black/10 text-center text-4xl font-bold">
         Sign Up
       </h1>
-      <div className="w-96 space-y-4 rounded bg-white py-5 px-10px shadow-sm">
+      <div className="px-10px w-96 space-y-4 rounded bg-white py-5 shadow-sm">
         <form onSubmit={handleSubmit}>
           <TextInput
             label="Display Name:"
@@ -161,17 +161,17 @@ export default function Signup({ changeFrom }) {
 
           <button
             type="submit"
-            className="mt-5 w-full rounded bg-dodger-blue py-10px text-sm font-semibold text-white transition-colors hover:bg-moody-blue disabled:bg-scorpion"
+            className="bg-dodger-blue py-10px hover:bg-moody-blue disabled:bg-scorpion mt-5 w-full rounded text-sm font-semibold text-white transition-colors"
             disabled={submitted}
           >
             {submitted ? <Loading className="mx-auto h-5 w-5" /> : "Sign Up"}
           </button>
         </form>
       </div>
-      <div className="mt-2 font-medium text-scorpion">
+      <div className="text-scorpion mt-2 font-medium">
         Already Have Account?{" "}
         <button
-          className="font-semibold text-cod-gray outline-none transition-colors hover:text-dodger-blue"
+          className="text-cod-gray hover:text-dodger-blue font-semibold outline-none transition-colors"
           onClick={() => changeFrom("signin")}
         >
           Sign In Here

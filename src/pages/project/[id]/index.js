@@ -74,7 +74,8 @@ const SingleProject = () => {
     pinProject(id, pinnedProjectsList, auth);
   };
 
-  if (loading || projectLoading || ticketsIsLoading) return <Loading />;
+  if (loading || projectLoading || ticketsIsLoading || router.isFallback)
+    return <Loading />;
   if (!loading && !projectLoading && !ticketsIsLoading && error)
     return (
       <Layout>
@@ -82,9 +83,6 @@ const SingleProject = () => {
       </Layout>
     );
 
-  if (!router.isFallback) {
-    return <Loading />;
-  }
   return (
     <Layout>
       <div className="relative mr-10">
