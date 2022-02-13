@@ -29,7 +29,9 @@ export const userSlice = createSlice({
       state.isLoading = false;
     },
     [getUsers.rejected]: (state, payload) => {
-      toast.error("Loading Users Rejected");
+      toast.error("Loading Users Rejected", {
+        toastId: "Error While Loading User Data",
+      });
     },
   },
 });

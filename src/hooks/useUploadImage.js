@@ -18,12 +18,17 @@ const useUploadImage = () => {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
       },
-      (err) => toast.error("Error While Uploading Project Icon"),
+      (err) =>
+        toast.error("Error While Uploading Project Icon", {
+          toastId: "Error Uploading Icon",
+        }),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           const docRef = doc(firestore, "Projects", projectID);
           setDoc(docRef, { icon: url }, { merge: true }).catch(() => {
-            toast.error("Error While Adding Icon To The Project");
+            toast.error("Error While Adding Icon To The Project", {
+              toastId: "Error Adding Icon To Project",
+            });
           });
         });
       }

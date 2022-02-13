@@ -140,10 +140,12 @@ const New = () => {
       if (projectIcon) {
         uploadImage(projectId, projectIcon);
       }
-      toast.success("Project Created");
+      toast.success("Project Created", { toastId: "Project Created" });
       Router.push("/dashboard");
     } catch (error) {
-      toast.success("Something When Wrong");
+      toast.success("Something When Wrong", {
+        toastId: "Error While Creating the Project",
+      });
       // console.log(error);
     }
   };
@@ -154,7 +156,7 @@ const New = () => {
       <div className="mr-10px">
         <div className="flex justify-end">
           <button
-            className="rounded bg-dodger-blue px-2 py-1 text-white transition-colors hover:bg-moody-blue disabled:bg-scorpion"
+            className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
             onClick={handleSubmit}
             disabled={disabledForm}
           >

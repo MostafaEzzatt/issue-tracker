@@ -7,7 +7,7 @@ const checkUserInProjectTicket = (auth, projectId, projects) => {
   const checkIfMember = getManagerProjects(auth, getProject);
 
   if (checkIfMember.length == 0 && auth.user.role !== "admin") {
-    toast.info("You Can't See This Ticket");
+    toast.info("You Can't See This Ticket", { toastId: "Access Warning" });
     Router.push("/tickets");
     return false;
   }

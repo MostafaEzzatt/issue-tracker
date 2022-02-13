@@ -98,12 +98,13 @@ const New = () => {
     addDoc(addTicketDocRef, ticketObject)
       .then((data) => {
         visited(data, auth);
-        toast.success("Ticket Created");
+        toast.success("Ticket Created", { toastId: "Ticket Created" });
         Router.push("/tickets");
       })
       .catch(() => {
         toast.error(
-          "Something Went Wrong While Adding Your Ticket Please Try Again Later"
+          "Something Went Wrong While Adding Your Ticket Please Try Again Later",
+          { toastId: "Error Adding Ticket" }
         );
         setDisabledForm(false);
       });
@@ -114,7 +115,7 @@ const New = () => {
       <div className="mr-10px">
         <div className="flex justify-end">
           <button
-            className="rounded bg-dodger-blue px-2 py-1 text-white transition-colors hover:bg-moody-blue disabled:bg-scorpion"
+            className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
             onClick={handleSubmit}
             disabled={disabledForm}
           >

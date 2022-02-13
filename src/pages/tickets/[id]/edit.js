@@ -123,19 +123,22 @@ const Edit = () => {
 
     setDoc(updateTicketDocRef, ticketObject, { merge: true })
       .then(() => {
-        toast.success("Ticket Updated");
+        toast.success("Ticket Updated", { toastId: "Ticket Updated" });
         Router.push("/tickets");
       })
       .catch(() => {
-        toast.error("Something Went Wrong While Updating The Ticket");
+        toast.error("Something Went Wrong While Updating The Ticket", {
+          toastId: "Error Ticket Updating",
+        });
         disabledForm(false);
       });
   };
 
-  if (!router.isFallback) {
+  if (
+    (loading && projectLoading && !error && !projectError) ||
+    router.isFallback
+  )
     return <Loading />;
-  }
-  if (loading && projectLoading && !error && !projectError) return <Loading />;
   if ((!loading && !projectLoading && error) || projectError)
     return (
       <Layout>

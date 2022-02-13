@@ -71,7 +71,9 @@ const Edit = () => {
     setManagerList(users.users.filter((user) => user.role == "manager"));
 
     if (auth.isLoggedIn && auth.user.role == "member") {
-      toast.info("Manager And Admin only Can Do This");
+      toast.info("Manager And Admin only Can Do This", {
+        toastId: "Error Manager Or Admin Can Do The change",
+      });
       Router.push(`/project/${id}`);
     } else {
       setLoading(false);
@@ -109,11 +111,13 @@ const Edit = () => {
     setDoc(projectDocRef, projectObject, { merge: true })
       .then(() => {
         setDisabledForm(false);
-        toast.success("Project Updated");
+        toast.success("Project Updated", { toastId: "Project Updated" });
         Router.push(`/project/${id}`);
       })
       .catch(() => {
-        toast.error("Something Went Wrong While Updating The Project");
+        toast.error("Something Went Wrong While Updating The Project", {
+          toastId: "Error While Updating The Project",
+        });
       });
   };
 
@@ -129,10 +133,7 @@ const Edit = () => {
     }
   };
 
-  if (projectLoading || loading) return <Loading />;
-  if (!router.isFallback) {
-    return <Loading />;
-  }
+  if (projectLoading || loading || router.isFallback) return <Loading />;
   return (
     <Layout>
       <div className="mr-10px">

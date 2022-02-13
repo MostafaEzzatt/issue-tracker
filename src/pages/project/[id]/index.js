@@ -29,7 +29,6 @@ import checkMemberInProject from "../../../util/checkMemberInProject";
 import filterPinnedProjects from "../../../util/filterPinnedProjects";
 import pinProject from "../../../util/pinProject";
 import checkIfProjectPinned from "../../../util/checkIfProjectPinned";
-import { toast } from "react-toastify";
 
 const SingleProject = () => {
   const router = useRouter();
@@ -43,18 +42,14 @@ const SingleProject = () => {
   const auth = useSelector((state) => state.auth);
   const actions = useSelector((state) => state.actions);
   const [loading, setLoading] = useState(true);
-  const [showToast, setShowToast] = useState(true);
   const [isPinned, setIsPinned] = useState(false);
 
   useEffect(() => {
-    if (project && auth && showToast) {
+    if (project && auth.isLoggedIn) {
       if (checkMemberInProject(auth, project)) {
         setLoading(false);
       } else {
-        setShowToast(true);
         Router.push("/project");
-        toast("You Are Not Member Or Manager In This Project");
-        setShowToast(false);
       }
     }
   }, [project, auth]);

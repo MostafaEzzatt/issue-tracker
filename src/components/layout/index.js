@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-// Toast Css
-
 // Components
 import Nav from "./Nav";
 
@@ -23,7 +21,7 @@ const Layout = ({ children }) => {
         }`}
       >
         <button
-          className="visible absolute top-10px left-0 z-50 cursor-pointer bg-white shadow-sm sm:hidden"
+          className="top-10px visible absolute left-0 z-50 cursor-pointer bg-white shadow-sm sm:hidden"
           onClick={() => setToggleNav(!toggleNav)}
         >
           {toggleNav ? (
@@ -39,7 +37,7 @@ const Layout = ({ children }) => {
         >
           <Nav />
         </div>
-        <div className="sm col-span-2 ml-10px pt-8 sm:col-span-4 sm:ml-0 md:col-span-6 xl:col-span-9">
+        <div className="sm ml-10px col-span-2 pt-8 sm:col-span-4 sm:ml-0 md:col-span-6 xl:col-span-9">
           {children}
         </div>
       </div>
