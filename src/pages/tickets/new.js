@@ -112,7 +112,7 @@ const New = () => {
 
   return (
     <Layout>
-      <div className="mr-10px">
+      <div className="px-3">
         <div className="flex justify-end">
           <button
             className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
@@ -121,16 +121,6 @@ const New = () => {
           >
             {disabledForm ? <Loading className="h-6 w-6" /> : "Add Ticket"}
           </button>
-        </div>
-
-        <div className="mb-10px">
-          <span className="block text-sm font-medium">Project</span>
-          <DropdownInput
-            list={projectsList}
-            setData={setProject}
-            field="title"
-            idField="id"
-          />
         </div>
 
         <TextInput label="Title" value={title} handleChange={handleTitle} />
@@ -142,16 +132,36 @@ const New = () => {
         />
 
         <TextInput label="Source" value={source} handleChange={handleSource} />
+      </div>
 
-        <SectionTitle title="Priority" />
+      <div className="mt-8 flex items-center">
+        <div className="w-full md:w-1/2">
+          <SectionTitle title="Priority" />
+          <div className="px-3">
+            <RadioInput
+              list={["low", "normal", "important", "critical"]}
+              prefix="priority"
+              store={setPriority}
+              checked={priority}
+            />
+          </div>
+        </div>
 
-        <RadioInput
-          list={["low", "normal", "important", "critical"]}
-          prefix="priority"
-          store={setPriority}
-          checked={priority}
-        />
+        <div>
+          <SectionTitle title="Project" />
 
+          <div className="ml-3">
+            <DropdownInput
+              list={projectsList}
+              setData={setProject}
+              field="title"
+              idField="id"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8">
         <SectionTitle title="Assigns To" />
         <ContentGrid>
           {users.length > 0 &&

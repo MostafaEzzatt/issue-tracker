@@ -41,22 +41,24 @@ const DropdownInput = ({
 
   return (
     <div
-      className="group relative mt-10px flex w-full cursor-pointer justify-between rounded border border-scorpion py-3 px-3 group-hover:border-cod-gray"
+      className={`group group-hover:border-cod-gray relative flex w-full cursor-pointer justify-between border-b border-solid py-1.5 md:w-44 ${
+        isOpen ? "border-dodger-blue" : "border-scorpion"
+      }`}
       onClick={() => setIsOpen(!isOpen)}
       ref={menuRef}
     >
-      <span>{selected}</span>
-      <ArrowDown className="pointer-events-none h-5 w-5 text-scorpion group-hover:text-cod-gray" />
+      <span className="text-scorpion">{selected}</span>
+      <ArrowDown className="text-scorpion group-hover:text-cod-gray pointer-events-none h-5 w-5" />
       <div
         className={`${
           isOpen ? "absolute" : "hidden"
-        } top-full left-0 right-0 mt-10px rounded bg-silver py-1 px-1 shadow-md`}
+        } bg-silver top-full left-0 right-0 mt-2.5 rounded py-1 shadow-md`}
       >
         {list.length > 0 ? (
           <ul className="divide-y">
             {list.map((item) => (
               <li
-                className="break-words py-3 px-3 font-medium transition-colors hover:bg-dodger-blue hover:text-silver"
+                className="hover:bg-dodger-blue hover:text-silver break-words py-3 px-1.5 font-medium transition-colors"
                 key={item[idField]}
                 onClick={() => handleClick(item)}
               >
@@ -65,7 +67,7 @@ const DropdownInput = ({
             ))}
           </ul>
         ) : (
-          <p className="py-3 text-center font-bold text-scorpion">
+          <p className="text-scorpion py-3 text-center font-bold">
             There Is Not Managers Yet
           </p>
         )}

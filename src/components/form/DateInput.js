@@ -11,10 +11,10 @@ const DateInput = ({ label, error, value, min, handleChange }) => {
           value={value}
           min={min}
           onChange={handleChange}
-          className="mt-10px block"
+          className="mt-2.5 block"
         />
       </label>
-      <div className="mt-1 rounded bg-red-100 px-10px font-medium text-cod-gray">
+      <div className="text-cod-gray mt-1 rounded bg-red-100 px-2.5 font-medium">
         {error}
       </div>
     </>

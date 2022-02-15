@@ -70,45 +70,56 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="mr-10px relative">
-        {auth.user.role == "manager" ||
-        ticket.author.uuid == auth.user.uuid ||
-        auth.user.role == "admin" ? (
-          <div className="-right-10px absolute -top-8 flex h-8 w-8 items-center justify-center rounded-bl bg-green-500 shadow-sm transition-all hover:bg-green-600 hover:shadow-md">
+      <div className="px-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-cod-gray break-words text-4xl font-semibold">
+            {ticket.title}
+          </h3>
+
+          {auth.user.role == "manager" ||
+          ticket.author.uuid == auth.user.uuid ||
+          auth.user.role == "admin" ? (
             <Link href={`${id}/edit`}>
-              <a className="cursor-pointer text-white">
+              <a className="text-cod-gray cursor-pointer transition-colors hover:text-green-700">
                 <Pencil className="h-6 w-6" />
               </a>
             </Link>
-          </div>
-        ) : (
-          ""
-        )}
+          ) : (
+            ""
+          )}
+        </div>
 
-        <h3 className="text-title text-cod-gray break-words font-semibold">
-          {ticket.title}
-        </h3>
-
-        <div className="mt-10px mb-5">
+        <div className="mt-2.5 mb-4">
           <span className="text-dodger-blue">Assigned By: </span>
           {ticket.author.displayName}
         </div>
 
-        <p className="text-scorpion text-sm sm:text-base">
+        <p className="text-scorpion mb-8 text-sm sm:text-base">
           {ticket.description}
         </p>
+      </div>
 
-        {ticket.assignedTo.length > 0 && (
-          <>
-            <SectionTitle title="Assigned To" />
-            <ContentGrid>
+      {ticket.assignedTo.length > 0 && (
+        <>
+          <SectionTitle title="Assigned To" />
+          <div className="px-3">
+            <ul className="mb-8 grid grid-cols-12 gap-2.5">
               {ticket.assignedTo.map((user) => (
-                <DisplayUserBlock user={user} key={user.uuid} />
+                <li
+                  className="col-span-12 md:col-span-6 xl:col-span-4"
+                  key={user.uuid}
+                >
+                  <div className="rounded bg-white py-2.5 px-3 font-medium">
+                    {user.displayName}
+                  </div>
+                </li>
               ))}
-            </ContentGrid>
-          </>
-        )}
+            </ul>
+          </div>
+        </>
+      )}
 
+      <div className="px-3">
         <Comments ticketId={id} />
       </div>
     </Layout>

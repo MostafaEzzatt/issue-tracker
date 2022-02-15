@@ -19,8 +19,8 @@ const FileUploader = ({ file, setFile, url = "" }) => {
     }
   };
   return (
-    <div className="group my-10px flex h-32 w-full justify-center rounded border-2 border-dashed border-scorpion bg-alto">
-      <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center font-black text-scorpion transition-colors group-hover:text-cod-gray">
+    <div className="group border-scorpion bg-alto my-2.5 flex h-32 w-full justify-center rounded border-2 border-dashed">
+      <label className="text-scorpion group-hover:text-cod-gray flex h-full w-full cursor-pointer flex-col items-center justify-center font-black transition-colors">
         {file?.name || <UploadIcon url={url} />}
         <p>{error}</p>
         <input type="file" onChange={changeHandler} className="hidden" />
@@ -32,7 +32,7 @@ const FileUploader = ({ file, setFile, url = "" }) => {
 const UploadIcon = ({ url }) => {
   return (
     <>
-      <div className="mb-1 flex h-12 w-12 items-center justify-center rounded-full border border-scorpion text-scorpion transition-colors group-hover:border-cod-gray group-hover:text-cod-gray">
+      <div className="border-scorpion text-scorpion group-hover:border-cod-gray group-hover:text-cod-gray mb-1 flex h-12 w-12 items-center justify-center rounded-full border transition-colors">
         {url.trim().length == 0 ? (
           <Plus className="h-6 w-6" />
         ) : (

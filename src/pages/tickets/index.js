@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 // Components
 import Layout from "../../components/layout";
@@ -6,6 +7,9 @@ import TicketCard from "../../components/ticket/TicketCard";
 import ContentGrid from "../../components/ContentGrid";
 import Loading from "../../components/layout/Loading";
 import DropdownInput from "../../components/form/DropdownInput";
+
+// Assets
+import Plus from "../../assets/plus.svg";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -64,7 +68,7 @@ const Tickets = () => {
   if (!loading && error)
     return (
       <Layout>
-        <div className="mr-10px bg-white py-6 text-center font-bold text-scorpion shadow-sm">
+        <div className="text-scorpion mr-2.5 bg-white py-6 text-center font-bold shadow-sm">
           {error}
         </div>
       </Layout>
@@ -72,14 +76,24 @@ const Tickets = () => {
 
   return (
     <Layout>
-      <div className="mx-auto flex w-5/6 items-center justify-center gap-3">
-        <span className="font-medium">Project</span>
-        <DropdownInput
-          list={projectList}
-          setData={setProjectFilter}
-          field={"title"}
-          idField="id"
-        />
+      <div className="flex flex-col gap-4 px-3 md:flex-row md:justify-between">
+        <div className="flex flex-col gap-1.5 md:flex-row md:items-center">
+          <span className="text-scorpion font-medium">Filter By Project:</span>
+          <DropdownInput
+            list={projectList}
+            setData={setProjectFilter}
+            field={"title"}
+            idField="id"
+          />
+        </div>
+
+        <Link href="/tickets/new">
+          <a className="">
+            <div className="text-dodger-blue hover:text-moody-blue h-6 w-full rounded bg-white shadow-sm transition-all duration-200 hover:shadow-lg md:w-6">
+              <Plus className="mx-auto h-6 w-6" />
+            </div>
+          </a>
+        </Link>
       </div>
       <ContentGrid>
         {filteredTickets.length > 0 &&

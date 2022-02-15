@@ -1,9 +1,13 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 // Components
 import Layout from "../../components/layout";
 import ContentList from "../../components/ContentList";
 import ProjectCard from "../../components/project/ProjectCard";
+
+// Assets
+import Plus from "../../assets/plus.svg";
 
 // Custom Hooks
 import useGetAllProjects from "../../hooks/useGetAllProjects";
@@ -34,21 +38,31 @@ const Project = () => {
 
   return (
     <Layout>
-      <ContentList>
-        {projects.length > 0 &&
-          projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              id={project.id}
-              img={project?.icon}
-              title={project.title}
-              startedAt={project.createdAt}
-              manager={project.manager}
-              description={project.description}
-              state={project.state}
-            />
-          ))}
-      </ContentList>
+      <div className="px-3">
+        <div className="mb-4 flex justify-end">
+          <Link href="/project/new">
+            <a className="w-full md:w-6">
+              <div className="text-dodger-blue hover:text-moody-blue h-6 w-full rounded bg-white shadow-sm transition-all duration-200 hover:shadow-lg md:w-6">
+                <Plus className="mx-auto h-6 w-6" />
+              </div>
+            </a>
+          </Link>
+        </div>
+        <ContentList>
+          {projects.length > 0 &&
+            projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                id={project.id}
+                img={project?.icon}
+                title={project.title}
+                manager={project.manager.uuid}
+                description={project.description}
+                state={project.state}
+              />
+            ))}
+        </ContentList>
+      </div>
     </Layout>
   );
 };

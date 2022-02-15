@@ -1,7 +1,7 @@
 import React from "react";
 
 const ContentList = ({ children }) => {
-  return <ul className="mt-4 w-full space-y-2">{children}</ul>;
+  return <div className="space-y-1.5">{children}</div>;
 };
 
 export default ContentList;

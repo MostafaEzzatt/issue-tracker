@@ -5,46 +5,24 @@ import Head from "next/head";
 import Layout from "../components/layout";
 import SectionTitle from "../components/SectionTitle";
 import ContentGrid from "../components/ContentGrid";
-import ProjectSmallCard from "../components/project/ProjectSmallCard";
 import TicketCard from "../components/ticket/TicketCard";
 import ContentList from "../components/ContentList";
 import ProjectCard from "../components/project/ProjectCard";
 import ErrorBlock from "../components/shared/ErrorBlock";
 import LoadingBlock from "../components/shared/LoadingBlock";
 
-// Custom Hooks
-import useGetAllProjects from "../hooks/useGetAllProjects";
-
-// Redux
-import { useSelector } from "react-redux";
-
 // Util
-import getMemberProjects from "../util/getMemberProjects";
-import getManagerProjects from "../util/getManagerProjects";
 import useGetNotVisitedTickets from "../hooks/useGetNotVisitedTickets";
 import useGetPinnedProjects from "../hooks/useGetPinnedProjects";
 
 export default function Dashboard() {
-  const { projects, loading, error } = useGetAllProjects();
-  const [filteredProjects, setFilteredProjects] = useState([]);
   const {
     tickets,
     loading: ticketsLoading,
     error: ticketsError,
   } = useGetNotVisitedTickets();
-  const auth = useSelector((state) => state.auth);
   const { pinnedProjects, pinnedProjectsLoading, pinnedProjectsError } =
     useGetPinnedProjects();
-
-  useEffect(() => {
-    if (auth.user.role == "member") {
-      setFilteredProjects(getMemberProjects(auth, projects));
-    } else if (auth.user.role == "manager") {
-      setFilteredProjects(getManagerProjects(auth, projects));
-    } else if (auth.user.role == "admin") {
-      setFilteredProjects(projects);
-    }
-  }, [projects, auth]);
 
   return (
     <>
@@ -55,23 +33,6 @@ export default function Dashboard() {
       </Head>
 
       <Layout>
-        <SectionTitle title="Pinned Project" />
-        {!pinnedProjectsLoading && pinnedProjects.length > 0 ? (
-          <ContentGrid>
-            {pinnedProjects.map((project) => (
-              <ProjectSmallCard
-                key={project.id}
-                id={project.id}
-                img={project.icon}
-                name={project.title}
-                description={project.title}
-              />
-            ))}
-          </ContentGrid>
-        ) : (
-          <ErrorBlock message={pinnedProjectsError} />
-        )}
-
         <SectionTitle title="New Tickets" />
         {!ticketsLoading && tickets.length > 0 ? (
           <ContentGrid>
@@ -92,27 +53,31 @@ export default function Dashboard() {
           <ErrorBlock message={ticketsError || "Cant Find Tickets"} />
         )}
 
-        <SectionTitle title="Project" />
-        <ContentList>
-          {filteredProjects.length > 0 || !ticketsLoading ? (
-            filteredProjects
-              .slice(0, 3)
-              .map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  id={project.id}
-                  img={project.icon}
-                  title={project.title}
-                  startedAt={project.createdAt}
-                  manager={project.manager}
-                  description={project.description}
-                  state={project.state}
-                />
-              ))
+        <div className="mt-8">
+          <SectionTitle title="Pinned Projects" />
+        </div>
+
+        <div className=" px-3">
+          {!pinnedProjectsLoading && pinnedProjects.length > 0 ? (
+            <ContentList>
+              {pinnedProjects.map((project) => {
+                return (
+                  <ProjectCard
+                    key={project.id}
+                    id={project.id}
+                    title={project.title}
+                    img={project.icon}
+                    description={project.description}
+                    manager={project.manager.id}
+                    state={project.state}
+                  />
+                );
+              })}
+            </ContentList>
           ) : (
-            <ErrorBlock message={error} />
+            <ErrorBlock message={pinnedProjectsError} />
           )}
-        </ContentList>
+        </div>
       </Layout>
     </>
   );

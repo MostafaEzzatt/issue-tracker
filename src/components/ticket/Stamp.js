@@ -1,10 +1,10 @@
 const Stamp = ({ type }) => {
   return (
-    <div
-      className={`max-w-max rounded-full px-2 py-[3px] text-xs font-medium capitalize ${type}`}
+    <span
+      className={`ml-1 rounded-full py-[2px] px-[6px] text-xs font-medium ${type}`}
     >
       {type}
-    </div>
+    </span>
   );
 };
 

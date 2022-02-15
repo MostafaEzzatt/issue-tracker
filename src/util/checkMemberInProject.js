@@ -7,7 +7,6 @@ const checkMemberInProject = (auth, project) => {
     project.manager.uuid == auth.user.uuid ||
     project.members.findIndex((member) => member.uuid == auth.user.uuid) !== -1;
 
-  console.log(auth.user.role);
   if (!tempProjects && auth.user.role !== "admin") {
     toast.info("You Are Not Member Or Manager In This Project", {
       toastId: "Member or Manager Only Access Warnings",

@@ -149,7 +149,7 @@ const Edit = () => {
     );
   return (
     <Layout>
-      <div className="mr-10px">
+      <div className="mb-8 px-3">
         <div className="flex justify-end">
           <button
             className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
@@ -164,17 +164,6 @@ const Edit = () => {
           </button>
         </div>
 
-        <div className="mb-10px">
-          <span className="block text-sm font-medium">Project</span>
-          <DropdownInput
-            list={projectsList}
-            setData={setProject}
-            field="title"
-            idField="id"
-            selectedInput={project?.title}
-          />
-        </div>
-
         <TextInput label="Title" value={title} handleChange={handleTitle} />
 
         <TextareaInput
@@ -184,30 +173,49 @@ const Edit = () => {
         />
 
         <TextInput label="Source" value={source} handleChange={handleSource} />
-
-        <SectionTitle title="Priority" />
-
-        <RadioInput
-          list={["low", "normal", "important", "critical"]}
-          prefix="priority"
-          store={setPriority}
-          checked={priority}
-        />
-
-        <SectionTitle title="Assigns To" />
-
-        <ContentGrid>
-          {users.length > 0 &&
-            users.map((user) => (
-              <UserBlock
-                usersList={assignedTo}
-                setUsersList={setAssignedTo}
-                key={user.uuid}
-                user={user}
-              />
-            ))}
-        </ContentGrid>
       </div>
+
+      <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-center">
+        <div className="w-full md:w-1/2">
+          <SectionTitle title="Priority" />
+          <div className="pl-3">
+            <RadioInput
+              list={["low", "normal", "important", "critical"]}
+              prefix="priority"
+              store={setPriority}
+              checked={priority}
+            />
+          </div>
+        </div>
+
+        {/* <span className="block text-sm font-medium">Project</span> */}
+        <div className="">
+          <SectionTitle title="Project" />
+          <div className="pl-3">
+            <DropdownInput
+              list={projectsList}
+              setData={setProject}
+              field="title"
+              idField="id"
+              selectedInput={project?.title}
+            />
+          </div>
+        </div>
+      </div>
+
+      <SectionTitle title="Assigns To" />
+
+      <ContentGrid>
+        {users.length > 0 &&
+          users.map((user) => (
+            <UserBlock
+              usersList={assignedTo}
+              setUsersList={setAssignedTo}
+              key={user.uuid}
+              user={user}
+            />
+          ))}
+      </ContentGrid>
     </Layout>
   );
 };

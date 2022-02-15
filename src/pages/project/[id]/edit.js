@@ -136,7 +136,7 @@ const Edit = () => {
   if (projectLoading || loading || router.isFallback) return <Loading />;
   return (
     <Layout>
-      <div className="mr-10px">
+      <div className="px-3">
         <div className="flex justify-end">
           <button
             className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
@@ -177,31 +177,43 @@ const Edit = () => {
           min={today}
           handleChange={(e) => setDate(e.target.value)}
         />
+      </div>
 
+      <div className="mt-8">
         <SectionTitle title="Manager" />
-        <DropdownInput
-          list={managerList}
-          setData={setManager}
-          selectedInput={manager?.displayName}
-          field="displayName"
-          idField="uuid"
-        />
+        <div className="px-3">
+          <DropdownInput
+            list={managerList}
+            setData={setManager}
+            selectedInput={manager?.displayName}
+            field="displayName"
+            idField="uuid"
+          />
+        </div>
+      </div>
 
+      <div className="mt-8">
         <SectionTitle title="State" />
-        <RadioInput
-          list={["open", "close"]}
-          prefix="state"
-          store={setState}
-          checked={state}
-        />
+        <div className="px-3">
+          <RadioInput
+            list={["open", "close"]}
+            prefix="state"
+            store={setState}
+            checked={state}
+          />
+        </div>
+      </div>
 
+      <div className="mt-8">
         <SectionTitle title="Members" />
-        <TextInput
-          label="Filter"
-          error=""
-          value={membersFilter}
-          handleChange={handleMembersFilter}
-        />
+        <div className="px-3">
+          <TextInput
+            label="Filter"
+            error=""
+            value={membersFilter}
+            handleChange={handleMembersFilter}
+          />
+        </div>
 
         <ContentGrid>
           {filteredUsers.length > 0 &&

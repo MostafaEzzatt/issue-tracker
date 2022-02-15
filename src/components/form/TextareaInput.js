@@ -7,11 +7,11 @@ const Textarea = ({ label, error, value, handleChange }) => {
         <textarea
           value={value}
           onChange={handleChange}
-          className="mt-10px block w-full rounded border border-solid
-        border-alto bg-silver py-10px pl-10px text-cod-gray"
+          className="border-alto bg-silver text-cod-gray mt-2.5 block w-full
+        rounded border border-solid py-2.5 pl-2.5"
         ></textarea>
       </label>
-      <div className="mt-1 rounded bg-red-100 px-10px font-medium text-cod-gray">
+      <div className="text-cod-gray mt-1 rounded bg-red-100 px-2.5 font-medium">
         {error}
       </div>
     </>

@@ -8,12 +8,20 @@ const useGetManager = (id) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const users = useSelector((state) => state.users);
+
   useEffect(() => {
     if (id) {
       if (users.users.length > 0) {
-        setManager(users.users.filter((user) => user.uuid == id)[0]);
+        const tempManager = users.users.filter((user) => user.uuid == id);
+
+        if (tempManager.length > 0) {
+          setManager(users.users.filter((user) => user.uuid == id)[0]);
+          setError(null);
+        } else {
+          setManager(null);
+          setError("This Manager Not Exist");
+        }
         setLoading(false);
-        setError(null);
       } else {
         setLoading(false);
         setError("Something Went Wrong");

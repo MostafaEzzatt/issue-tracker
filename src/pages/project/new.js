@@ -153,7 +153,7 @@ const New = () => {
   if (loading) return <Loading />;
   return (
     <Layout>
-      <div className="mr-10px">
+      <div className="px-3">
         <div className="flex justify-end">
           <button
             className="bg-dodger-blue hover:bg-moody-blue disabled:bg-scorpion rounded px-2 py-1 text-white transition-colors"
@@ -186,45 +186,56 @@ const New = () => {
           min={today}
           handleChange={handleDate}
         />
-
-        <SectionTitle title="Manager" />
-        <DropdownInput
-          list={managerList}
-          setData={setManager}
-          field="displayName"
-          idField="uuid"
-        />
-
-        <SectionTitle title="State" />
-        <RadioInput
-          list={["open", "close"]}
-          prefix="state"
-          store={setState}
-          checked={state}
-        />
-
-        <SectionTitle title="Members" />
-        <TextInput
-          label="Filter"
-          error=""
-          value={membersFilter}
-          handleChange={handleMembersFilter}
-        />
-
-        <ContentGrid>
-          {filteredUsers.length > 0 &&
-            filteredUsers.map((user) => (
-              <UserBlock
-                usersList={projectMembers}
-                setUsersList={setProjectMembers}
-                user={user}
-                key={user.uuid}
-                addRemove={addRemoveMemberFromProject}
-                onList={projectMembers.includes(user.uuid)}
-              />
-            ))}
-        </ContentGrid>
       </div>
+      <div className="mt-8">
+        <SectionTitle title="Manager" />
+        <div className="px-3">
+          <DropdownInput
+            list={managerList}
+            setData={setManager}
+            field="displayName"
+            idField="uuid"
+          />
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <SectionTitle title="State" />
+        <div className="px-3">
+          <RadioInput
+            list={["open", "close"]}
+            prefix="state"
+            store={setState}
+            checked={state}
+          />
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <SectionTitle title="Members" />
+        <div className="px-3">
+          <TextInput
+            label="Filter"
+            error=""
+            value={membersFilter}
+            handleChange={handleMembersFilter}
+          />
+        </div>
+      </div>
+
+      <ContentGrid>
+        {filteredUsers.length > 0 &&
+          filteredUsers.map((user) => (
+            <UserBlock
+              usersList={projectMembers}
+              setUsersList={setProjectMembers}
+              user={user}
+              key={user.uuid}
+              addRemove={addRemoveMemberFromProject}
+              onList={projectMembers.includes(user.uuid)}
+            />
+          ))}
+      </ContentGrid>
     </Layout>
   );
 };

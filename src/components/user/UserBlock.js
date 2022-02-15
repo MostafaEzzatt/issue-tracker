@@ -5,7 +5,7 @@ import addRemoveUserFromList from "../../util/addRemoveUserFromList";
 
 const UserBlock = ({ usersList, setUsersList, user }) => {
   return (
-    <div className="col-span-2 flex cursor-pointer justify-between bg-white p-10px shadow-sm hover:shadow-md">
+    <div className="col-span-12 flex cursor-pointer justify-between bg-white p-2.5 shadow-sm hover:shadow-md md:col-span-6 xl:col-span-4">
       {user.displayName}
 
       <button

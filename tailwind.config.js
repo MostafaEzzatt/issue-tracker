@@ -6,6 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      width: {
+        contentWidth: "calc(100% - 64px)",
+        mdContentWidth: "calc(100% - 256px)",
+      },
+      height: {
+        contentHeight: "calc(100vh - 48px)",
+      },
       fontSize: {
         title: ["2rem", "2.5rem"],
       },
@@ -22,6 +29,7 @@ module.exports = {
         alto: "#D9D9D9",
         alabaster: "#F9F9F9",
         silver: "#FCFCFC",
+        "tower-gray": "#BBBBBB",
       },
     },
   },

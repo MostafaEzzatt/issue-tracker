@@ -28,7 +28,7 @@ const useGetTicketComments = (ticketId) => {
             { ...comment },
             {
               user: commentUser[0],
-              creation: `${commentDate.getHours()} ${commentDate.getMinutes()} | ${commentDate.getMonth()}/${commentDate.getDay()}/${commentDate.getFullYear()}`,
+              creation: `${commentDate.getHours()}:${commentDate.getMinutes()} | ${commentDate.getMonth()}/${commentDate.getDay()}/${commentDate.getFullYear()}`,
             }
           );
         });

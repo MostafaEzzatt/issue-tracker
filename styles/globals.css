@@ -7,6 +7,10 @@
     font-family: "IBM Plex Sans", sans-serif;
   }
 
+  .active > div:nth-child(1){
+    @apply bg-[#F9F9F9] text-[#5D92FF] relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#5D92FF]
+  }
+  
   h1,h2,h3,h4,h5,h6,p,a{
     @apply text-cod-gray
   }

@@ -29,6 +29,7 @@ import checkMemberInProject from "../../../util/checkMemberInProject";
 import filterPinnedProjects from "../../../util/filterPinnedProjects";
 import pinProject from "../../../util/pinProject";
 import checkIfProjectPinned from "../../../util/checkIfProjectPinned";
+import ProjectMenu from "../../../components/project/ProjectMenu";
 
 const SingleProject = () => {
   const router = useRouter();
@@ -80,92 +81,104 @@ const SingleProject = () => {
 
   return (
     <Layout>
-      <div className="relative mr-10">
-        <div className="absolute -top-8 -right-10 flex items-center justify-center gap-2 rounded-bl">
-          <button
-            className={`h-8 w-8 ${
-              isPinned
-                ? "border-dodger-blue bg-dodger-blue text-silver hover:border-moody-blue hover:bg-moody-blue"
-                : "border-alto bg-silver text-cod-gray hover:bg-alto"
-            }  border border-solid transition-colors `}
-            onClick={handlePinProject}
-          >
-            <PaperClip className="mx-auto h-5 w-5" />
-          </button>
+      <div className="px-3">
+        <div className="mb-2.5 flex gap-x-2 pb-2.5">
+          {/* <!-- Logo --> */}
+          <div className="relative h-12 w-12 overflow-hidden rounded-full">
+            {project.icon ? (
+              <Image
+                src={project.icon}
+                width={50}
+                height={50}
+                alt={project.title}
+                objectFit="cover"
+                objectPosition="center"
+              />
+            ) : (
+              <FakeIcon />
+            )}
+          </div>
 
-          {auth.user.role !== "member" && (
-            <Link href={`${id}/edit`}>
-              <a className="flex h-8 w-8 cursor-pointer items-center justify-center bg-green-500 text-white shadow-sm transition-all hover:bg-green-600 hover:shadow-md">
-                <Pencil className="h-6 w-6" />
-              </a>
-            </Link>
-          )}
+          {/* <!-- Meta --> */}
+          <div className="flex-auto">
+            <h4 className="text-lg font-semibold">{project.title}</h4>
+            <div className="mt-1 flex flex-col gap-1 text-xs text-[#BBBBBB] md:flex-row">
+              <div>Manager : {project.manager.displayName}</div>
+            </div>
+          </div>
+
+          {/* <!-- Menu --> */}
+
+          <ProjectMenu id={id} />
         </div>
 
-        <div className="flex max-w-full flex-col items-center gap-2 sm:flex-row">
-          {project.icon && (
-            <Image
-              src={project?.icon}
-              alt={project.title}
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-          )}
-          <h3 className="w-titleWidth text-title flex-auto break-words font-semibold">
-            {project.title}
-          </h3>
-          <Stamp type={project.state} />
-        </div>
-
-        <div className="flex flex-col justify-between sm:flex-row sm:items-center">
+        {/* <!-- Time And State --> */}
+        <div className="mb-4 flex flex-col gap-2 text-[#606060] md:flex-row">
           <div>
-            <span className="text-dodger-blue">@: </span> {project.createdAt}
+            <span className="text-[#5D92FF]">@</span> 10:30 |{" "}
+            {project.createdAt}
           </div>
           <div>
-            <span className="text-dodger-blue">Manager: </span>{" "}
-            {project.manager.displayName}
-          </div>
-          <div>
-            <span className="text-dodger-blue">Time Estimate: </span>{" "}
+            <span className="text-[#5D92FF]">Time Estimate</span> :{" "}
             {project.endAt}
           </div>
-        </div>
-
-        <p className="text-scorpion mt-5 mb-4 text-sm md:text-base">
-          {project.description}
-        </p>
-
-        <SectionTitle title="Members" />
-        <ContentGrid>
-          {project.members.length &&
-            project.members.map((user) => (
-              <DisplayUserBlock key={user.uuid} user={user} />
-            ))}
-        </ContentGrid>
-
-        <SectionTitle title="Tickets" />
-        {tickets.length > 0 ? (
-          <ContentGrid>
-            {tickets.map((ticket) => (
-              <TicketCard
-                key={ticket.id}
-                id={ticket.id}
-                title={ticket.title}
-                description={ticket.description}
-                priority={ticket.priority}
-                assignedBy={ticket.author.displayName}
-              />
-            ))}
-          </ContentGrid>
-        ) : (
-          <div className="mt-10px text-scorpion w-full bg-white py-6 text-center font-bold shadow-sm">
-            {TicketsError}
+          <div>
+            <span
+              className={`inline-block h-7 w-16 rounded text-center text-sm capitalize leading-7 text-white ${project.state}`}
+            >
+              {project.state}
+            </span>
           </div>
-        )}
+        </div>
       </div>
+      <p className="mb-8 px-3 text-[#606060]">{project.description}</p>
+
+      <h3 className="mb-4 px-3 text-2xl font-bold">Members</h3>
+
+      {/* <!-- Members List --> */}
+      <ul className="mb-8 grid grid-cols-12 gap-2.5 px-3">
+        {project.members.length &&
+          project.members.map((user) => (
+            <>
+              {/* <!-- List Item --> */}
+              <li
+                className="col-span-12 md:col-span-6 xl:col-span-4"
+                key={user.uuid}
+              >
+                <div className="rounded bg-white py-2.5 px-3 font-medium">
+                  {user.displayName}
+                </div>
+              </li>
+            </>
+          ))}
+      </ul>
+
+      <h3 className="mb-4 px-3 text-2xl font-bold">Tickets</h3>
+      {/* <!-- item --> */}
+      {tickets.length > 0 ? (
+        <ContentGrid>
+          {tickets.map((ticket) => (
+            <TicketCard
+              key={ticket.id}
+              id={ticket.id}
+              title={ticket.title}
+              description={ticket.description}
+              priority={ticket.priority}
+              assignedBy={ticket.author.displayName}
+            />
+          ))}
+        </ContentGrid>
+      ) : (
+        <div className="text-scorpion mx-3 mt-2.5 w-full bg-white py-6 text-center font-bold shadow-sm">
+          {TicketsError}
+        </div>
+      )}
     </Layout>
   );
+};
+
+const FakeIcon = () => {
+  return <div className="h-[50px] w-[50px] rounded-full bg-white"></div>;
 };
 
 export default SingleProject;
