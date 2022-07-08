@@ -11,6 +11,7 @@ import validatePassword from "../../helpers/validatePassword";
 // Firebase
 import { auth } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
 
 export default function Signin({ changeFrom }) {
     const [email, setEmail] = useState("");
@@ -65,6 +66,42 @@ export default function Signin({ changeFrom }) {
             }
         }
     }
+
+    // this is part for testing
+    const signInAsMember = async () => {
+        try {
+            const signin = await signInWithEmailAndPassword(
+                auth,
+                "member@user.com",
+                "Pass123@"
+            );
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+    const signInAsManager = async () => {
+        try {
+            const signin = await signInWithEmailAndPassword(
+                auth,
+                "manager@mail.com",
+                "Pass123@"
+            );
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+    const signInAsAdmin = async () => {
+        try {
+            const signin = await signInWithEmailAndPassword(
+                auth,
+                "manager@mail.com",
+                "Pass123@"
+            );
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
     return (
         <>
             <h1 className="mb-8 w-96 border-b border-solid border-black/10 pb-2.5 text-center text-4xl font-bold">
