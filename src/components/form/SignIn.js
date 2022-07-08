@@ -94,7 +94,7 @@ export default function Signin({ changeFrom }) {
         try {
             const signin = await signInWithEmailAndPassword(
                 auth,
-                "manager@mail.com",
+                "admin@mail.com",
                 "Pass123@"
             );
         } catch (error) {
@@ -105,8 +105,7 @@ export default function Signin({ changeFrom }) {
     return (
         <>
             <h1 className="mb-8 w-96 border-b border-solid border-black/10 pb-2.5 text-center text-4xl font-bold">
-                {" "}
-                Sign Up{" "}
+                Sign Up
             </h1>
             <div className="w-96 space-y-4 rounded bg-white px-2.5 py-5 shadow-sm">
                 <form onSubmit={handleSubmit}>
@@ -132,6 +131,31 @@ export default function Signin({ changeFrom }) {
                     </button>
                 </form>
             </div>
+
+            <div className="mt-4 w-96 space-y-4 rounded bg-white px-2.5 py-5 text-center shadow-sm">
+                <div className="font-bold">Login As</div>
+                <div className="flex justify-between px-3">
+                    <button
+                        className="rounded px-5 py-2 font-medium text-dodger-blue transition-colors hover:bg-gray-50 hover:text-moody-blue"
+                        onClick={() => signInAsMember()}
+                    >
+                        Member
+                    </button>
+                    <button
+                        className="rounded px-5 py-2 font-medium text-dodger-blue transition-colors hover:bg-gray-50 hover:text-moody-blue"
+                        onClick={() => signInAsManager()}
+                    >
+                        Manager
+                    </button>
+                    <button
+                        className="rounded px-5 py-2 font-medium text-dodger-blue transition-colors hover:bg-gray-50 hover:text-moody-blue"
+                        onClick={() => signInAsAdmin()}
+                    >
+                        Admin
+                    </button>
+                </div>
+            </div>
+
             <div className="mt-2 font-medium text-scorpion">
                 Don&apos;t have an account yet?{" "}
                 <button
