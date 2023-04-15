@@ -13,7 +13,6 @@ export default function Home() {
     return (
         <NotAuthorized>
             <>
-                welcome
                 <div className="flex h-screen w-full flex-col items-center justify-center">
                     {form == "signup" ? (
                         <SignUp changeFrom={setForm} />
